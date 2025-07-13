@@ -41,8 +41,6 @@ try:
 except ImportError:
   print("WARNING: NWChem has not been loaded ... it will not be available for initial sampling")
 
-from venuspy.calc.mopaccalc import mopaccalculator
-
 # Try importing NWChemEx
 try:
   from venuspy.calc.nwchemexcalc import nwchemexcalculator
@@ -69,7 +67,7 @@ except ImportError:
 
 # Try importing chempotpy
 try:
-  from venuspy.chempotpycalc import chempotpyCalculator
+  from venuspy.calc.chempotpycalc import chempotpyCalculator
 except ImportError:
   print("WARNING: chempotpy has not been loaded ... it will not be available for initial sampling")
 
