@@ -1,4 +1,6 @@
-# Summary
+<img align="center" width="600" height="800" src="images/venuspylogo1.png">
+
+# VENUSpy
 
 
 
@@ -9,8 +11,8 @@ We suggest first-time users to use the command line interface (CLI) for simulati
 - [MOPAC](#mopac)
 - [PSI4](#psi4)
 - [ChemPotPy](#chempotpy)
-- [ML Potentials](#mlpotential)
-- [Hybrid Potential](#hybridpotential)
+- [ML Potentials](#ml-potential-(schnet,-physnet,-sgdml))
+- [Hybrid Potential](#hybrid-potential)
 
 ## MOPAC
 
