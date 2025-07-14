@@ -29,6 +29,23 @@ The file `cli.py` can be run with your favourite Python environment so long as t
 
 ## Sampling Methods
 
+To illustrate the difference that sampling can make, consider how vibrationally excited water would be at room temperature. Chemical reactivity is typically controlled by the vibrational energy in the molecule's bonds. At room temperature (298K), molecules have an average of 0.592 kcal/mol in vibrational energy. We can compare vibrational energies of water sampled from:
+
+- A 298K canonical ensemble 
+- A 0.592 kcal/mol microcanonical ensemble
+
+### Canonical sampling
+
+```
+python -u cli.py H2O.input.xyz H2O.input.xtb .  --atomsInFirstGroup "1 2 3" --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --TVIBa 298.0 --TROTa 0.0 --n_threads 1 > production.log
+```
+
+### Microcanonical sampling
+
+```
+python -u cli.py H2O.input.xyz H2O.input.xtb .  --atomsInFirstGroup "1 2 3" --production 100 --interval 1 --time_step 0.15 --INITQPa "microcanonica" --EVIBa 0.592 --EROTa 0.0 --n_threads 1 > production.log
+```
+
 
 ## Potential Energy Surface
 
@@ -39,7 +56,6 @@ To do any sampling or dynamics, a PES is necessary. Many options are available:
 - [TBLite](#tblite)
 - [ChemPotPy](#chempotpy)
 - [ML Potentials](#python-based-ml-potentials)
-- [Hybrid Potential](#hybrid-potential)
 
 
 ### MOPAC
@@ -324,12 +340,12 @@ python -u cli.py CH.SH2.input.xyz MLmodels/CHSH2/model.physnet.config . --atomsI
 
 
 
-### Hybrid Potential
+## Hybrid Potential
 
 <details>
 <summary>Click here to expand the instructions</summary>
 
-See the attached manuscript to see details of when and how to use a hybrid potential energy surface. In general, an ab initio method would be combined with a ML method. Right now, the only ML method it is implemented with is sGDML (due to the ease in retraining it on-the-fly). For the ab initio method, let's test this out on one of the simplest non-analytical potentials, MOPAC. First, install both software:
+See the attached manuscript to see details of when and how to use a hybrid potential energy surface. In general, an ab initio method would be combined with a ML method. Right now, the only ML method it is implemented with is sGDML (due to the ease in retraining it on-the-fly). For the ab initio method, let's test this out on one of the simplest non-analytical potentials, xTB. First, install both software:
 
 ```
 python -m venv .hybridmd
@@ -342,8 +358,12 @@ pip install ase venuspy
 Add the argument `--MDtype "smoothed"` and you're good to go:
 
 ```
-python -u cli.py B.C2H2.input.xyz B.C2H2.input.xtb . --MDtype "smoothed" --atomsInFirstGroup "1" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log
+python -u cli.py B.C2H2.input.xyz B.C2H2.input.xtb . --MDtype "smoothed" --atomsInFirstGroup "1" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 5000 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log
 ```
+
+The xTB software, although not a completely ab initio theory, uses similar kinds of SCF methods and also runs into convergence problems. Over the course of the 5000 steps simulated, it often will have two or three energy drift/jump issues. When this happens, the sGDML surface quickly trains on the local surface and tries to save the trajectory. After some number of steps, the xTB method takes over again.
+
+While basically irrelevant for xTB, this ability to save a higher level calculation is of great import to expensive methods like true ab initio calculations with DZ or TZ basis sets.
 
 </details>
 
