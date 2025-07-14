@@ -16,7 +16,7 @@ try:
   from sgdml.predict import GDMLPredict
   from sgdml.intf.ase_calc import SGDMLCalculator
 
-  from minisgdmlcalc import miniSGDMLCalculator
+  from .calc.minisgdmlcalc import miniSGDMLCalculator
 
 except ImportError:
   print("WARNING: sGDML has not been loaded ... cannot do 'smoothedMD'")

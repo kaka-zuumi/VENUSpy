@@ -4,6 +4,8 @@
 
 # Summary
 
+VENUSpy is a Python-based implementation of the VENUS software for molecular dynamics and initial sampling. VENUS has been used by computational chemists to simulate real-life conditions with appropriate statistical ensembles. Depending on what ensemble you're interested in and how many trajectories you can simulate, you may need to adjust what kind of sampling you do! Canonical, microcanonical, and normal-mode sampling can be carried out on any provided potential energy surface (PES).
+
 
 
 # Example Usage
@@ -22,7 +24,15 @@ pip install venuspy
 pip install ase
 ```
 
-The file `cli.py` can be run with your favourite Python environment so long as the appropriate packages can be installed. Then, input files and command line arguments can be supplied to it. Many options are available:
+The file `cli.py` can be run with your favourite Python environment so long as the appropriate packages can be installed. Then, input files and command line arguments can be supplied to it.
+
+
+## Sampling Methods
+
+
+## Potential Energy Surface
+
+To do any sampling or dynamics, a PES is necessary. Many options are available:
 
 - [MOPAC](#mopac)
 - [PSI4](#psi4)
@@ -319,10 +329,20 @@ python -u cli.py CH.SH2.input.xyz MLmodels/CHSH2/model.physnet.config . --atomsI
 <details>
 <summary>Click here to expand the instructions</summary>
 
-Let's test this out on one of the simplest non-analytical potentials, MOPAC.
+See the attached manuscript to see details of when and how to use a hybrid potential energy surface. In general, an ab initio method would be combined with a ML method. Right now, the only ML method it is implemented with is sGDML (due to the ease in retraining it on-the-fly). For the ab initio method, let's test this out on one of the simplest non-analytical potentials, MOPAC. First, install both software:
 
 ```
-python -u cli.py B.C2H2.input.xyz B.C2H2.input.mopac . --MDtype "smoothed" --atomsInFirstGroup "1" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log
+python -m venv .hybridmd
+source .hybridmd/bin/activate
+pip install sgdml
+pip install tblite
+pip install ase venuspy
+```
+
+Add the argument `--MDtype "smoothed"` and you're good to go:
+
+```
+python -u cli.py B.C2H2.input.xyz B.C2H2.input.xtb . --MDtype "smoothed" --atomsInFirstGroup "1" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log
 ```
 
 </details>
