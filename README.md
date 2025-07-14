@@ -31,11 +31,11 @@ The file `cli.py` can be run with your favourite Python environment so long as t
 - [ML Potentials](#python-based-ml-potentials)
 - [Hybrid Potential](#hybrid-potential)
 
-<img align="right" width="300" height="200" src="images/mopaclogo1.png">
-
 ### MOPAC
 
 <details>
+
+<img align="right" width="300" height="200" src="images/mopaclogo1.png">
 
 To use MOPAC, it must first be installed somehow. On Ubuntu 24.0 for example, it can be installed with:
 
@@ -81,9 +81,12 @@ Sometimes the SCF calculation in MOPAC does not converge which leads to the erro
 </details>
 
 
-<img align="right" width="400" height="200" src="images/psi4logo1.png">
 
 ### PSI4
+
+<details>
+
+<img align="right" width="400" height="200" src="images/psi4logo1.png">
 
 To use PSI4, it can be installed with `conda`. You can create a conda environment for it like so:
 
@@ -127,10 +130,15 @@ python -u cli.py B.C2H2.input.xyz B.C2H2.input.psi4 . --atomsInFirstGroup "1" --
 
 While PSI4 is parallelized, it is a full electronic structure calculation so it takes more than a minute to do the molecular dynamics, let alone the initial sampling. By default, if there are convergence issues at any step of the initial sampling or dynamics, the ab initio calculation is restarted with slightly different or looser parameters. We suggest skipping a full trajectory simulation if trying this as a test.
 
+</details>
 
-<img align="right" width="400" height="200" src="images/xtblogo1.png">
+
 
 ### TBLite
+
+<details>
+
+<img align="right" width="400" height="200" src="images/xtblogo1.png">
 
 To use TBLite, it can be installed with `pip`, like so:
 
@@ -172,8 +180,12 @@ python -u cli.py B.C2H2.input.xyz B.C2H2.input.xtb . --atomsInFirstGroup "1" --c
 
 Sometimes the xTB calculation does not converge. By default, VENUSpy restarts the calculation a few times with slightly different parameters to try to save the trajectory.
 
+</details>
+
 
 ### ChemPotPy
+
+<details>
 
 To use ChemPotPy, the main package can be installed with `pip` and some helper packages must be installed with `conda`. As suggested by the developers, a new conda environment can be made for chempotpy with the appropriate packages installed like so:
 
@@ -217,14 +229,20 @@ Then, any initial sampling and MD parameters can be given to this. For example, 
 python -u cli.py O.O2.input.xyz O.O2.input.chempotpy . --atomsInFirstGroup "1" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log
 ```
 
+</details>
+
+
+
+### Python-Based ML Potentials
+
+<details>
+
 <p>
 <img align="right" width="250" height="100" src="images/pytorchlogo1.png">
 </p>
 <p>
 <img align="right" width="300" height="200" src="images/tensorflowlogo1.jpg">
 </p>
-
-### Python-Based ML Potentials
 
 Many Python-based machine learning (ML) potentials exist now and because of the variety of different ML software, there may be conflicts between installed software. It is suggested to always create separate `conda` environments for each software. If `pip` is being used, separate Python virtual environments can be used for each software as well.
 
@@ -285,16 +303,21 @@ And then do the initial sampling and MD:
 python -u cli.py CH.SH2.input.xyz MLmodels/CHSH2/model.physnet.config . --atomsInFirstGroup "1 2" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log 2> /dev/null
 ```
 
+</details>
 
 
 
 
 ### Hybrid Potential
 
+<details>
+
 Let's test this out on one of the simplest non-analytical potentials, MOPAC.
 
 ```
 python -u cli.py B.C2H2.input.xyz B.C2H2.input.mopac . --MDtype "smoothed" --atomsInFirstGroup "1" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log
 ```
+
+</details>
 
 
