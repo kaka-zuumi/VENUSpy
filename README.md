@@ -1,6 +1,6 @@
-<img align="center" width="600" height="800" src="images/venuspylogo1.png">
+<img align="center" width="400" height="600" src="images/venuspylogo1.png">
 
-# VENUSpy
+# Summary
 
 
 
@@ -11,8 +11,10 @@ We suggest first-time users to use the command line interface (CLI) for simulati
 - [MOPAC](#mopac)
 - [PSI4](#psi4)
 - [ChemPotPy](#chempotpy)
-- [ML Potentials](#ml-potential-(schnet,-physnet,-sgdml))
+- [ML Potentials](#python-based-ml-potential)
 - [Hybrid Potential](#hybrid-potential)
+
+<img align="right" width="400" height="200" src="images/mopaclogo1.png">
 
 ## MOPAC
 
@@ -57,6 +59,8 @@ python -u cli.py B.C2H2.input.xyz B.C2H2.input.mopac . --atomsInFirstGroup "1" -
 
 Sometimes the SCF calculation in MOPAC does not converge which leads to the error: `ase.calculators.calculator.CalculationFailed: ... failed`. This happens about 1/5 times for this system; restarting it often resolves this.
 
+
+<img align="right" width="400" height="200" src="images/psi4logo1.png">
 
 ## PSI4
 
@@ -148,7 +152,10 @@ python -u cli.py O.O2.input.xyz O.O2.input.chempotpy . --atomsInFirstGroup "1" -
 ```
 
 
-## ML Potentials (Schnet, Physnet, sGDML)
+<img align="right" width="400" height="200" src="images/pytorchlogo1.png">
+<img align="right" width="400" height="200" src="images/tensorflowlogo1.png">
+
+## Python-Based ML Potentials
 
 
 
