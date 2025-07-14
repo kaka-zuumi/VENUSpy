@@ -1,4 +1,6 @@
-<img align="center" width="400" height="600" src="images/venuspylogo1.png">
+<p align="center">
+  <img align="center" width="400" height="600" src="images/venuspylogo1.png">
+</p>
 
 # Summary
 
@@ -14,7 +16,7 @@ We suggest first-time users to use the command line interface (CLI) for simulati
 - [ML Potentials](#python-based-ml-potential)
 - [Hybrid Potential](#hybrid-potential)
 
-<img align="right" width="400" height="200" src="images/mopaclogo1.png">
+<img align="right" width="300" height="200" src="images/mopaclogo1.png">
 
 ## MOPAC
 
@@ -153,7 +155,7 @@ python -u cli.py O.O2.input.xyz O.O2.input.chempotpy . --atomsInFirstGroup "1" -
 
 
 <img align="right" width="400" height="200" src="images/pytorchlogo1.png">
-<img align="right" width="400" height="200" src="images/tensorflowlogo1.png">
+<img align="right" width="400" height="200" src="images/tensorflowlogo1.jpg">
 
 ## Python-Based ML Potentials
 
