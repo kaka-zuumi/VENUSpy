@@ -213,8 +213,12 @@ Then, any initial sampling and MD parameters can be given to this. For example, 
 python -u cli.py O.O2.input.xyz O.O2.input.chempotpy . --atomsInFirstGroup "1" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log
 ```
 
+<p>
 <img align="right" width="250" height="100" src="images/pytorchlogo1.png">
+</p>
+<p>
 <img align="right" width="300" height="200" src="images/tensorflowlogo1.jpg">
+</p>
 
 ### Python-Based ML Potentials
 
