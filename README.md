@@ -8,10 +8,25 @@
 
 # Example Usage
 
-We suggest first-time users to use the command line interface (CLI) for simulations. The file `cli.py` can be run with your favourite Python environment so long as the appropriate packages can be installed. Then, input files and command line arguments can be supplied to it. Many options are available:
+We suggest first-time users to use the command line interface (CLI) for simulations. It can be downloaded through git:
+
+```
+git clone https://github.com/kaka-zuumi/VENUSpy.git
+```
+
+Inside the downloaded folder, you can install VENUSpy with the Atomic Simulation Environment (ASE) package:
+
+```
+cd VENUSpy
+pip install venuspy
+pip install ase
+```
+
+The file `cli.py` can be run with your favourite Python environment so long as the appropriate packages can be installed. Then, input files and command line arguments can be supplied to it. Many options are available:
 
 - [MOPAC](#mopac)
 - [PSI4](#psi4)
+- [TBLite](#tblite)
 - [ChemPotPy](#chempotpy)
 - [ML Potentials](#python-based-ml-potentials)
 - [Hybrid Potential](#hybrid-potential)
@@ -66,7 +81,7 @@ Sometimes the SCF calculation in MOPAC does not converge which leads to the erro
 
 ### PSI4
 
-To use PSI4, it can be installed with conda. You can create a conda environment for it like so:
+To use PSI4, it can be installed with `conda`. You can create a conda environment for it like so:
 
 ```
 conda create --name psi4md psi4 ase -c conda-forge
@@ -113,7 +128,7 @@ While PSI4 is parallelized, it is a full electronic structure calculation so it 
 
 ### TBLite
 
-To use TBLite, it can be installed with pip, like so:
+To use TBLite, it can be installed with `pip`, like so:
 
 ```
 pip install tblite
@@ -200,7 +215,7 @@ python -u cli.py O.O2.input.xyz O.O2.input.chempotpy . --atomsInFirstGroup "1" -
 
 <p>
 <img align="right" width="250" height="100" src="images/pytorchlogo1.png">
-<img align="right" width="250" height="150" src="images/tensorflowlogo1.jpg">
+<img align="right" width="300" height="200" src="images/tensorflowlogo1.jpg">
 </p>
 
 ### Python-Based ML Potentials
