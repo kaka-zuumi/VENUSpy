@@ -4,10 +4,13 @@
 
 # Example Usage
 
-We suggest first-time users to use the command line interface (CLI) for simulations. The file `cli.py` can be run with your favourite Python environment so long as the appropriate packages can be installed. Then, input files and command line arguments can be supplied to it.
+We suggest first-time users to use the command line interface (CLI) for simulations. The file `cli.py` can be run with your favourite Python environment so long as the appropriate packages can be installed. Then, input files and command line arguments can be supplied to it. Many options are available:
 
 - [MOPAC](#mopac)
 - [PSI4](#psi4)
+- [ChemPotPy](#chempotpy)
+- [ML Potentials](#mlpotential)
+- [Hybrid Potential](#hybridpotential)
 
 ## MOPAC
 
