@@ -109,6 +109,51 @@ python -u cli.py B.C2H2.input.xyz B.C2H2.input.psi4 . --atomsInFirstGroup "1" --
 While PSI4 is parallelized, it is a full electronic structure calculation so it takes more than a minute to do the molecular dynamics, let alone the initial sampling. By default, if there are convergence issues at any step of the initial sampling or dynamics, the ab initio calculation is restarted with slightly different or looser parameters. We suggest skipping a full trajectory simulation if trying this as a test.
 
 
+<img align="right" width="400" height="200" src="images/xtblogo1.png">
+
+### TBLite
+
+To use TBLite, it can be installed with pip, like so:
+
+```
+pip install tblite
+```
+
+TBLite is a light-weight implementation of the extended tight-binding (xTB) Hamiltonian, which is a generic enough framework for most chemical reactions. Thus, it can be used for the same B + C2H2 reaction. The same geometry file `B.C2H2.input.xyz` can be used, while the PES is altered as:
+
+<details>
+<summary>B.C2H2.input.xyz</summary>
+
+```text
+5
+
+B      0.000000    0.000000    0.000000
+C     -1.707100    1.879500    0.000000
+C     -0.611600    2.321200    0.000000
+H      0.365700    2.747600    0.000000
+H     -2.684400    1.453100    0.000000
+```
+</details>
+
+<details>
+<summary>B.C2H2.input.xtb</summary>
+
+```text
+      xtbmethod GFN2-xTB
+         charge 0
+   multiplicity 2
+```
+</details>
+
+Similar to the MOPAC implementation, any initial sampling and MD parameters can be given to this so long as the B and C2H2 are kept separate. For example, for a bimolecular collision initiated with 2.4 kcal/mol of collision energy and cold C2H2, the following command works:
+
+```
+python -u cli.py B.C2H2.input.xyz B.C2H2.input.xtb . --atomsInFirstGroup "1" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log
+```
+
+Sometimes the xTB calculation does not converge. By default, VENUSpy restarts the calculation a few times with slightly different parameters to try to save the trajectory.
+
+
 ### ChemPotPy
 
 To use ChemPotPy, the main package can be installed with `pip` and some helper packages must be installed with `conda`. As suggested by the developers, a new conda environment can be made for chempotpy with the appropriate packages installed like so:
@@ -154,8 +199,8 @@ python -u cli.py O.O2.input.xyz O.O2.input.chempotpy . --atomsInFirstGroup "1" -
 ```
 
 <p>
-<img align="right" width="400" height="200" src="images/pytorchlogo1.png">
-<img align="right" width="400" height="300" src="images/tensorflowlogo1.jpg">
+<img align="right" width="250" height="100" src="images/pytorchlogo1.png">
+<img align="right" width="250" height="150" src="images/tensorflowlogo1.jpg">
 </p>
 
 ### Python-Based ML Potentials
