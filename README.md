@@ -13,12 +13,12 @@ We suggest first-time users to use the command line interface (CLI) for simulati
 - [MOPAC](#mopac)
 - [PSI4](#psi4)
 - [ChemPotPy](#chempotpy)
-- [ML Potentials](#python-based-ml-potential)
+- [ML Potentials](#python-based-ml-potentials)
 - [Hybrid Potential](#hybrid-potential)
 
 <img align="right" width="300" height="200" src="images/mopaclogo1.png">
 
-## MOPAC
+# MOPAC
 
 To use MOPAC, it must first be installed somehow. On Ubuntu 24.0 for example, it can be installed with:
 
@@ -64,7 +64,7 @@ Sometimes the SCF calculation in MOPAC does not converge which leads to the erro
 
 <img align="right" width="400" height="200" src="images/psi4logo1.png">
 
-## PSI4
+# PSI4
 
 To use PSI4, it can be installed with conda. You can create a conda environment for it like so:
 
@@ -109,7 +109,7 @@ python -u cli.py B.C2H2.input.xyz B.C2H2.input.psi4 . --atomsInFirstGroup "1" --
 While PSI4 is parallelized, it is a full electronic structure calculation so it takes more than a minute to do the molecular dynamics, let alone the initial sampling. By default, if there are convergence issues at any step of the initial sampling or dynamics, the ab initio calculation is restarted with slightly different or looser parameters. We suggest skipping a full trajectory simulation if trying this as a test.
 
 
-## ChemPotPy
+# ChemPotPy
 
 To use ChemPotPy, the main package can be installed with `pip` and some helper packages must be installed with `conda`. As suggested by the developers, a new conda environment can be made for chempotpy with the appropriate packages installed like so:
 
@@ -153,15 +153,16 @@ Then, any initial sampling and MD parameters can be given to this. For example, 
 python -u cli.py O.O2.input.xyz O.O2.input.chempotpy . --atomsInFirstGroup "1" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log
 ```
 
-
+<p>
 <img align="right" width="400" height="200" src="images/pytorchlogo1.png">
-<img align="right" width="400" height="200" src="images/tensorflowlogo1.jpg">
+<img align="right" width="400" height="300" src="images/tensorflowlogo1.jpg">
+</p>
 
-## Python-Based ML Potentials
+# Python-Based ML Potentials
 
 
 
-## Hybrid Potential
+# Hybrid Potential
 
 
 
