@@ -18,7 +18,7 @@ We suggest first-time users to use the command line interface (CLI) for simulati
 
 <img align="right" width="300" height="200" src="images/mopaclogo1.png">
 
-# MOPAC
+### MOPAC
 
 To use MOPAC, it must first be installed somehow. On Ubuntu 24.0 for example, it can be installed with:
 
@@ -64,7 +64,7 @@ Sometimes the SCF calculation in MOPAC does not converge which leads to the erro
 
 <img align="right" width="400" height="200" src="images/psi4logo1.png">
 
-# PSI4
+### PSI4
 
 To use PSI4, it can be installed with conda. You can create a conda environment for it like so:
 
@@ -109,7 +109,7 @@ python -u cli.py B.C2H2.input.xyz B.C2H2.input.psi4 . --atomsInFirstGroup "1" --
 While PSI4 is parallelized, it is a full electronic structure calculation so it takes more than a minute to do the molecular dynamics, let alone the initial sampling. By default, if there are convergence issues at any step of the initial sampling or dynamics, the ab initio calculation is restarted with slightly different or looser parameters. We suggest skipping a full trajectory simulation if trying this as a test.
 
 
-# ChemPotPy
+### ChemPotPy
 
 To use ChemPotPy, the main package can be installed with `pip` and some helper packages must be installed with `conda`. As suggested by the developers, a new conda environment can be made for chempotpy with the appropriate packages installed like so:
 
@@ -158,11 +158,11 @@ python -u cli.py O.O2.input.xyz O.O2.input.chempotpy . --atomsInFirstGroup "1" -
 <img align="right" width="400" height="300" src="images/tensorflowlogo1.jpg">
 </p>
 
-# Python-Based ML Potentials
+### Python-Based ML Potentials
 
 
 
-# Hybrid Potential
+### Hybrid Potential
 
 
 
