@@ -213,17 +213,80 @@ Then, any initial sampling and MD parameters can be given to this. For example, 
 python -u cli.py O.O2.input.xyz O.O2.input.chempotpy . --atomsInFirstGroup "1" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log
 ```
 
-<p>
 <img align="right" width="250" height="100" src="images/pytorchlogo1.png">
 <img align="right" width="300" height="200" src="images/tensorflowlogo1.jpg">
-</p>
 
 ### Python-Based ML Potentials
+
+Many Python-based machine learning (ML) potentials exist now and because of the variety of different ML software, there may be conflicts between installed software. It is suggested to always create separate `conda` environments for each software. If `pip` is being used, separate Python virtual environments can be used for each software as well.
+
+We will demonstrate interfaces with three examples: Schnet, sGDML, and Physnet.
+
+For Schnet, first install an appropriate version (depending on the version of the model):
+
+```
+python3.11 -m venv .schnetmd
+source .schnetmd/bin/activate
+pip install torch==2.3 schnetpack==2.0.4 pytorch-lightning==2.2
+pip install ase venuspy
+```
+
+And then do the initial sampling and MD:
+
+```
+python -u cli.py CH.C4H6.input.xyz MLmodels/CHC4H6/best_inference_model . --atomsInFirstGroup "1 2" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log
+```
+
+
+For sGDML, first install the latest version with `pip`:
+
+```
+python -m venv .sgdmlmd
+source .sgdmlmd/bin/activate
+pip install sgdml
+pip install ase venuspy
+```
+
+And then do the initial sampling and MD:
+
+```
+python -u cli.py HBr.HCl.input.xyz MLmodels/HBrHCl/model-train8000-sym2-sig0050.npz . --atomsInFirstGroup "1 2" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log
+```
+
+For Physnet, first download the latest version from github and install tensorflow:
+
+```
+git clone https://github.com/MMunibas/PhysNet.git
+conda create -n tensorflow1.14 tensorflow=1.14
+conda activate tensorflow1.14
+conda install ase -c conda-forge
+```
+
+And then change a few lines of code so that it works (there seem to be some backward compatability issues):
+
+```
+sed -i 's/import tensorflow as tf/import tensorflow.compat.v1 as tf/' PhysNet/*.py PhysNet/*/*.py PhysNet/*/*/*.py
+sed -i 's/self._saver = tf.train.Saver(self.variables, save_relative_paths=True, max_to_keep=50)/self._saver = tf.train.Saver(max_to_keep=50)/' PhysNet/neural_network/NeuralNetwork.py
+sed -i 's/@lru_cache/@lru_cache(maxsize=128)/' $(dirname $(which python))/../lib/python3.7/site-packages/ase/formula.py
+sed -i 's/from importlib.metadata import entry_points/from importlib_metadata import entry_points/' $(dirname $(which python))/../lib/python3.7/site-packages/ase/io/formats.py
+```
+
+And then do the initial sampling and MD:
+
+```
+python -u cli.py CH.SH2.input.xyz MLmodels/CHSH2/model.physnet.config . --atomsInFirstGroup "1 2" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log 2> /dev/null
+```
+
+
 
 
 
 ### Hybrid Potential
 
+Let's test this out on one of the simplest non-analytical potentials, MOPAC.
 
+```
+python -u cli.py B.C2H2.input.xyz B.C2H2.input.mopac . --MDtype "smoothed" --atomsInFirstGroup "1" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log
+```
 
 
