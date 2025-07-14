@@ -31,9 +31,8 @@ The file `cli.py` can be run with your favourite Python environment so long as t
 - [ML Potentials](#python-based-ml-potentials)
 - [Hybrid Potential](#hybrid-potential)
 
-### MOPAC
-
 <details>
+<summary>### MOPAC</summary>
 
 <img align="right" width="300" height="200" src="images/mopaclogo1.png">
 
