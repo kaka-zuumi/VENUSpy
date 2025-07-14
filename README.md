@@ -35,6 +35,8 @@ The file `cli.py` can be run with your favourite Python environment so long as t
 
 ### MOPAC
 
+<details>
+
 To use MOPAC, it must first be installed somehow. On Ubuntu 24.0 for example, it can be installed with:
 
 ```
@@ -75,6 +77,8 @@ python -u cli.py B.C2H2.input.xyz B.C2H2.input.mopac . --atomsInFirstGroup "1" -
 ```
 
 Sometimes the SCF calculation in MOPAC does not converge which leads to the error: `ase.calculators.calculator.CalculationFailed: ... failed`. This happens about 1/5 times for this system; restarting it often resolves this.
+
+</details>
 
 
 <img align="right" width="400" height="200" src="images/psi4logo1.png">
@@ -266,7 +270,7 @@ conda activate tensorflow1.14
 conda install ase -c conda-forge
 ```
 
-And then change a few lines of code so that it works (there seem to be some backward compatability issues):
+You may need to change a few lines of code so that it works (there seem to be some backward compatability issues):
 
 ```
 sed -i 's/import tensorflow as tf/import tensorflow.compat.v1 as tf/' PhysNet/*.py PhysNet/*/*.py PhysNet/*/*/*.py
