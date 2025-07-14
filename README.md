@@ -29,22 +29,28 @@ The file `cli.py` can be run with your favourite Python environment so long as t
 
 ## Sampling Methods
 
-To illustrate the difference that sampling can make, consider how vibrationally excited water would be at room temperature. Chemical reactivity is typically controlled by the vibrational energy in the molecule's bonds. At room temperature (298K), molecules have an average of 0.592 kcal/mol in vibrational energy. We can compare vibrational energies of water sampled from:
+To illustrate the difference that sampling can make, consider how reactive water would be at room temperature. Chemical reactivity is typically controlled by the vibrational energy in the molecule's bonds. At room temperature (298K), molecules have an average of 0.592 kcal/mol in vibrational energy. We can compare vibrational energies of water sampled from:
 
 - A 298K canonical ensemble 
 - A 0.592 kcal/mol microcanonical ensemble
 
 ### Canonical sampling
 
+<details>
+<summary>Click here to expand the instructions</summary>
 ```
 python -u cli.py H2O.input.xyz H2O.input.xtb .  --atomsInFirstGroup "1 2 3" --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --TVIBa 298.0 --TROTa 0.0 --n_threads 1 > production.log
 ```
+</details>
 
 ### Microcanonical sampling
 
+<details>
+<summary>Click here to expand the instructions</summary>
 ```
 python -u cli.py H2O.input.xyz H2O.input.xtb .  --atomsInFirstGroup "1 2 3" --production 100 --interval 1 --time_step 0.15 --INITQPa "microcanonica" --EVIBa 0.592 --EROTa 0.0 --n_threads 1 > production.log
 ```
+</details>
 
 
 ## Potential Energy Surface
@@ -342,7 +348,6 @@ python -u cli.py CH.SH2.input.xyz MLmodels/CHSH2/model.physnet.config . --atomsI
 
 ## Hybrid Potential
 
-<details>
 <summary>Click here to expand the instructions</summary>
 
 See the attached manuscript to see details of when and how to use a hybrid potential energy surface. In general, an ab initio method would be combined with a ML method. Right now, the only ML method it is implemented with is sGDML (due to the ease in retraining it on-the-fly). For the ab initio method, let's test this out on one of the simplest non-analytical potentials, xTB. First, install both software:
@@ -365,6 +370,5 @@ The xTB software, although not a completely ab initio theory, uses similar kinds
 
 While basically irrelevant for xTB, this ability to save a higher level calculation is of great import to expensive methods like true ab initio calculations with DZ or TZ basis sets.
 
-</details>
 
 
