@@ -4,10 +4,11 @@
 import tensorflow.compat.v1 as tf
 #tf.compat.v1.disable_eager_execution()
 #tf.disable_eager_execution()  # Kazuumi change for the Physnet (tensorflow 1.14.0) + Psi4 install
+#tf.disable_v2_behavior()
 
 from PhysNet.neural_network.NeuralNetwork import NeuralNetwork as PN_NeuralNetwork
 from PhysNet.neural_network.activation_fn import shifted_softplus as PN_shifted_softplus
-
+import tensorflow.compat.v1 as tf
 import numpy as np
 import os
 import sys

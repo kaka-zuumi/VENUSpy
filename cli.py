@@ -34,6 +34,13 @@ try:
 except ImportError:
   print("WARNING: psi4 has not been loaded ... it will not be available for initial sampling")
 
+# Try importing xtb (fast, semi-empirical DFT):
+try:
+# from tblite.ase import TBLite
+  from venuspy.calc.xtbcalc import TBLite
+except ImportError:
+  print("WARNING: xtb has not been loaded ... it will not be available for initial sampling")
+
 # Try import NWChem (not NWChemEx)
 #from nwchemcalc import nwchemcalculator
 try:
@@ -227,18 +234,22 @@ if ((b is not None) and (dCM is not None) and (1.2*(b**2 + dCM**2) > r2threshold
 # Look at the input file name to guess its identity
 try_bagel = False
 try_psi4 = False
+try_xtb = False
 try_mopac = False
 try_chempotpy = False
 try_nwchem = False
 try_nwchemex = False
 try_physnet = False
+try_schnet = False
+try_sgdml = False
 try_qcenginegamess = False
 if (input_path.endswith(('.npz',))):
 
   print("Input file '"+input_path+"' looks like a sGDML file so will attempt to read it in as such...")
   try:
     calc = SGDMLCalculator(input_path)
-    try_psi4 = False
+    try_sgdml = True
+#   try_psi4 = False
   except:
     print("   Could not load file '"+input_path+"' as a sGDML model!")
     try_psi4 = True
@@ -269,14 +280,43 @@ elif (input_path.endswith(('.nwchem',))):
 elif (input_path.endswith(('.chempotpy',))):
   try_chempotpy = True
 
+elif (input_path.endswith(('.xtb',))):
+  try_xtb = True
+
 elif (input_path.endswith(('.mopac',))):
   try_mopac = True
 
 elif (input_path.endswith(('.gamess.qcengine',))):
   try_qcenginegamess = True
 
-else:
+elif (input_path.endswith(('.nwchemex',))):
   try_nwchemex = True
+
+else:
+  try_schnet = True
+
+
+
+
+if (try_schnet):
+
+  # Initialize the ML ase interface
+
+  # To accomodate for the older versions of numpy used in Schnet==1.0
+  np.int = np.int32
+  np.float = np.float64
+  np.bool = np.bool_
+
+  calc = spk.interfaces.SpkCalculator(
+      input_path,
+      device="cpu",
+      energy="energy",    # Name of energies
+      forces="forces",    # Name of forces
+      energy_units="kcal/mol",
+      forces_units="kcal/mol/A",
+      neighbor_list=spk.transform.ASENeighborList(5.0),
+  )
+
 
 if (try_bagel):
   print("Reading input file '"+input_path+"' as a BAGEL input file...")
@@ -303,6 +343,10 @@ if (try_psi4):
   calc.E_to_eV = units.Ha
   calc.Ang_to_R = units.Ang
   calc.F_to_eV_Ang = (units.Ha / units.Bohr)
+
+if (try_xtb):
+  print("Reading input file '"+input_path+"' as a xtb input file...")
+  calc = TBLite(input_path)
 
 if (try_qcenginegamess):
   print("Reading input file '"+input_path+"' as a QCEngine/GAMESS input file...")
@@ -539,5 +583,6 @@ else:
   raise ValueError("MD type '"+MDtype+"' is not valid! Exiting...")
 
 MDgen.production(Nsteps)
+
 
 
