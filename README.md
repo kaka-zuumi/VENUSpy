@@ -35,7 +35,7 @@ The file `cli.py` can be run with your favourite Python environment so long as t
 ### MOPAC
 
 <details>
-<summary>Usage instructions</summary>
+<summary>Click here to expand the instructions</summary>
 
 <img align="right" width="300" height="200" src="images/mopaclogo1.png">
 
@@ -87,7 +87,7 @@ Sometimes the SCF calculation in MOPAC does not converge which leads to the erro
 ### PSI4
 
 <details>
-<summary>Usage instructions</summary>
+<summary>Click here to expand the instructions</summary>
 
 <img align="right" width="400" height="200" src="images/psi4logo1.png">
 
@@ -140,7 +140,7 @@ While PSI4 is parallelized, it is a full electronic structure calculation so it 
 ### TBLite
 
 <details>
-<summary>Usage instructions</summary>
+<summary>Click here to expand the instructions</summary>
 
 <img align="right" width="400" height="200" src="images/xtblogo1.png">
 
@@ -190,7 +190,7 @@ Sometimes the xTB calculation does not converge. By default, VENUSpy restarts th
 ### ChemPotPy
 
 <details>
-<summary>Usage instructions</summary>
+<summary>Click here to expand the instructions</summary>
 
 To use ChemPotPy, the main package can be installed with `pip` and some helper packages must be installed with `conda`. As suggested by the developers, a new conda environment can be made for chempotpy with the appropriate packages installed like so:
 
@@ -241,7 +241,7 @@ python -u cli.py O.O2.input.xyz O.O2.input.chempotpy . --atomsInFirstGroup "1" -
 ### Python-Based ML Potentials
 
 <details>
-<summary>Usage instructions</summary>
+<summary>Click here to expand the instructions</summary>
 
 <p>
 <img align="right" width="250" height="100" src="images/pytorchlogo1.png">
@@ -317,7 +317,7 @@ python -u cli.py CH.SH2.input.xyz MLmodels/CHSH2/model.physnet.config . --atomsI
 ### Hybrid Potential
 
 <details>
-<summary>Usage instructions</summary>
+<summary>Click here to expand the instructions</summary>
 
 Let's test this out on one of the simplest non-analytical potentials, MOPAC.
 
