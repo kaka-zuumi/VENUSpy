@@ -26,6 +26,12 @@ pip install ase
 
 The file `cli.py` can be run with your favourite Python environment so long as the appropriate packages can be installed. Then, input files and command line arguments can be supplied to it.
 
+There are three key features in VENUSpy:
+- [Sampling Methods](#sampling_methods)
+- [Potential Energy Surfaces](#potential_energy_surfaces)
+- [Hybrid Potential](#hybrid_potential)
+
+
 
 ## Sampling Methods
 
@@ -53,16 +59,9 @@ python -u cli.py H2O.input.xyz H2O.input.xtb .  --atomsInFirstGroup "1 2 3" --pr
 </details>
 
 
-## Potential Energy Surface
+## Potential Energy Surfaces
 
 To do any sampling or dynamics, a PES is necessary. Many options are available:
-
-- [MOPAC](#mopac)
-- [PSI4](#psi4)
-- [TBLite](#tblite)
-- [ChemPotPy](#chempotpy)
-- [ML Potentials](#python-based-ml-potentials)
-
 
 ### MOPAC
 
@@ -347,8 +346,6 @@ python -u cli.py CH.SH2.input.xyz MLmodels/CHSH2/model.physnet.config . --atomsI
 
 
 ## Hybrid Potential
-
-<summary>Click here to expand the instructions</summary>
 
 See the attached manuscript to see details of when and how to use a hybrid potential energy surface. In general, an ab initio method would be combined with a ML method. Right now, the only ML method it is implemented with is sGDML (due to the ease in retraining it on-the-fly). For the ab initio method, let's test this out on one of the simplest non-analytical potentials, xTB. First, install both software:
 
