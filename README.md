@@ -4,7 +4,7 @@
 
 # Summary
 
-VENUSpy is a Python-based implementation of the VENUS software for molecular dynamics and initial sampling. VENUS has been used by computational chemists to simulate real-life conditions with appropriate statistical ensembles. Depending on what ensemble you're interested in and how many trajectories you can simulate, you may need to adjust what kind of sampling you do! Canonical, microcanonical, and normal-mode sampling can be carried out on any provided potential energy surface (PES).
+VENUSpy is a Python-based implementation of the VENUS software for molecular dynamics and initial sampling. VENUS has been used by computational chemists to simulate real-life conditions with appropriate statistical ensembles. Depending on what ensemble you're interested in and how many trajectories you can simulate, you may need to adjust what kind of sampling you do!
 
 
 
