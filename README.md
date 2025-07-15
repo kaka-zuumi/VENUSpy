@@ -35,29 +35,61 @@ There are three key features in VENUSpy:
 
 ## Sampling Methods
 
-To illustrate the difference that sampling can make, consider how reactive water would be at room temperature. Chemical reactivity is typically controlled by the vibrational energy in the molecule's bonds. At room temperature (298K), molecules have an average of 0.592 kcal/mol in vibrational energy. We can compare vibrational energies of water sampled from:
+To illustrate the difference that sampling can make, consider the dynamics of water molecules at room temperature. Chemical reactivity is typically controlled by the vibrational energy in the molecule's bonds. At room temperature (298K), nearly all H2O molecules will be in their vibrational ground state with 12.6372 kcal/mol of zero-point energy. We can compare vibrational energies of water sampled from:
 
 - A 298K canonical ensemble 
-- A 0.592 kcal/mol microcanonical ensemble
+- A 12.6372 kcal/mol microcanonical ensemble
+
+For simplicity, you can use a fast generic software like xTB for these tests, which can be installed with:
+
+```
+pip install tblite
+```
 
 ### Canonical sampling
 
 <details>
 <summary>Click here to expand the instructions</summary>
+
+Water is a nonlinear molecule with three atoms, so it has three normal modes. The vibrational quanta of each mode will be sampled from a canonical ensemble, which assumes energies in each mode are related by a temperature. The frequency of the modes dictates the distribution of quanta and their energies. With xTB, these frequencies are 3653 cm-1 > 3645 cm-1 > 1538 cm-1 for the symmetric stretch, asymmetric stretch, and bending modes, respectively. VENUSpy can sample these with:
+
 ```
 python -u cli.py H2O.input.xyz H2O.input.xtb .  --atomsInFirstGroup "1 2 3" --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --TVIBa 298.0 --TROTa 0.0 --n_threads 1 > production.log
 ```
+
+The resulting distribution of vibrational energies in each mode is shown in the figure on the right. Nearly all molecules are in their ground vibrational state with energies of 0.23, 0.23, and 0.10 kcal/mol. This results in only a single possible combination of energies sampled.
+
 </details>
 
 ### Microcanonical sampling
 
 <details>
 <summary>Click here to expand the instructions</summary>
+
+Water is a nonlinear molecule with three atoms, so it has three normal modes. The vibrational energies of each mode will be sampled from a microcanonical ensemble, which assumes uniform mixing of energies between all modes. The frequency of the modes dictates the absolute amount of energy ultimately given to a mode. With xTB, these frequencies are 3653 cm-1 > 3645 cm-1 > 1538 cm-1 for the symmetric stretch, asymmetric stretch, and bending modes, respectively. VENUSpy can sample these with:
+
 ```
-python -u cli.py H2O.input.xyz H2O.input.xtb .  --atomsInFirstGroup "1 2 3" --production 100 --interval 1 --time_step 0.15 --INITQPa "microcanonica" --EVIBa 0.592 --EROTa 0.0 --n_threads 1 > production.log
+python -u cli.py H2O.input.xyz H2O.input.xtb .  --atomsInFirstGroup "1 2 3" --production 100 --interval 1 --time_step 0.15 --INITQPa "microcanonical" --EVIBa 12.6372 --EROTa 0.0 --n_threads 1 > production.log
 ```
+
+The resulting distribution of vibrational energies in each mode is shown in the figure on the right. The total amount of vibrational energy is uniformly mixed over all three modes, resulting in a seemingly random distribution of combinations of energies.
+
 </details>
 
+Finally, there is one more special case for diatomic molecules. Because polyatomic molecules have multiple normal modes, experimentally there is often more leeway in assigning exact rovibrational states to molecules---a difficult and often intractable problem. However, diatomic molecules can have exact rovibrational states assigned through computational quantization procedures. The phase and kinetic/potential distribution of the vibration can then be sampled classically. This semiclassical method is the preferred sampling method for diatoms.
+
+<details>
+<summary>Click here to do an example</summary>
+
+Let's do an example for the OH radical with the same software, for the N=2,J=5 rovibrational state:
+
+```
+python -u cli.py OH.input.xyz OH.input.xtb .  --atomsInFirstGroup "1 2" --production 100 --interval 1 --time_step 0.15 --INITQPa "semiclassical" --NVIBa 2 --NROTa 5 --n_threads 1 > production.log
+```
+
+Note that, with the semiclassical method, the rovibrational states' energies are not known a priori, as they are not approximated from the normal mode frequencies. Thus, only specific rovibrational states (N,J) can be sampled rather than ensembles. However, the ensemble of phases for a state are still sampled.
+
+</details>
 
 ## Potential Energy Surfaces
 
