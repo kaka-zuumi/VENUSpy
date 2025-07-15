@@ -57,11 +57,11 @@ Water is a nonlinear molecule with three atoms, so it has three normal modes. Th
 python -u cli.py H2O.input.xyz H2O.input.xtb .  --atomsInFirstGroup "1 2 3" --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --TVIBa 298.0 --TROTa 0.0 --n_threads 1 > production.log
 ```
 
-<img align="center" width="600" height="200" src="images/canonical.298K.png">
+<img align="center" width="600" height="250" src="images/canonical.298K.png">
 
 The resulting distribution of vibrational energies in each mode is shown in the figure above. Nearly all molecules are in their ground vibrational state with energies of 0.23, 0.23, and 0.10 kcal/mol. This results in only a single possible combination of energies sampled. At higher temperatures, the higher vibrational states start to get populated. At 3000K, if we repeat the procedure, we instead see a distribution as follows:
 
-<img align="center" width="600" height="200" src="images/canonical.3000K.png">
+<img align="center" width="600" height="250" src="images/canonical.3000K.png">
 
 </details>
 
@@ -76,9 +76,11 @@ Water is a nonlinear molecule with three atoms, so it has three normal modes. Th
 python -u cli.py H2O.input.xyz H2O.input.xtb .  --atomsInFirstGroup "1 2 3" --production 100 --interval 1 --time_step 0.15 --INITQPa "microcanonical" --EVIBa 12.6372 --EROTa 0.0 --n_threads 1 > production.log
 ```
 
-<img align="center" width="600" height="200" src="images/microcanonical.12.63.png">
+<img align="center" width="600" height="250" src="images/microcanonical.12.63.png">
 
 The resulting distribution of vibrational energies in each mode is shown in the figure above. The total amount of vibrational energy is uniformly mixed over all three modes, resulting in a seemingly random distribution of combinations of energies. In this way, a microcanonical ensemble favors mixing mode energies over explicit quantizations. The same behaviour is seen at all excitations, including one corresponding to the avereage energy of the 3000K canonical ensemble from the previous example:
+
+<img align="center" width="600" height="250" src="images/microcanonical.21.22.png">
 
 </details>
 
