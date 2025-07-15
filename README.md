@@ -27,9 +27,9 @@ pip install ase
 The file `cli.py` can be run with your favourite Python environment so long as the appropriate packages can be installed. Then, input files and command line arguments can be supplied to it.
 
 There are three key features in VENUSpy:
-- [Sampling Methods](#sampling_methods)
-- [Potential Energy Surfaces](#potential_energy_surfaces)
-- [Hybrid Potential](#hybrid_potential)
+- [Sampling Methods](#sampling-methods)
+- [Potential Energy Surfaces](#potential-energy-surfaces)
+- [Hybrid Potential](#hybrid-potential)
 
 
 
