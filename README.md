@@ -46,7 +46,7 @@ For simplicity, you can use a fast generic software like xTB for these tests, wh
 pip install tblite
 ```
 
-### Canonical sampling
+### Canonical Sampling
 
 <details>
 <summary>Click here to expand the instructions</summary>
@@ -61,7 +61,7 @@ The resulting distribution of vibrational energies in each mode is shown in the 
 
 </details>
 
-### Microcanonical sampling
+### Microcanonical Sampling
 
 <details>
 <summary>Click here to expand the instructions</summary>
@@ -75,6 +75,8 @@ python -u cli.py H2O.input.xyz H2O.input.xtb .  --atomsInFirstGroup "1 2 3" --pr
 The resulting distribution of vibrational energies in each mode is shown in the figure on the right. The total amount of vibrational energy is uniformly mixed over all three modes, resulting in a seemingly random distribution of combinations of energies.
 
 </details>
+
+### Semiclassical Sampling
 
 Finally, there is one more special case for diatomic molecules. Because polyatomic molecules have multiple normal modes, experimentally there is often more leeway in assigning exact rovibrational states to molecules---a difficult and often intractable problem. However, diatomic molecules can have exact rovibrational states assigned through computational quantization procedures. The phase and kinetic/potential distribution of the vibration can then be sampled classically. This semiclassical method is the preferred sampling method for diatoms.
 
