@@ -51,7 +51,7 @@ pip install tblite
 <details>
 <summary>Click here to do the example</summary>
 
-Water is a nonlinear molecule with three atoms, so it has three normal modes. The vibrational quanta of each mode will be sampled from a canonical ensemble, which assumes energies in each mode are related by a temperature. The frequency of the modes dictates the distribution of quanta and their energies. With xTB, these frequencies are 3653 cm<sup>-1</sup> > 3645 cm<sup>-1</sup> > 1538 cm<sup>-1</sup> for the symmetric stretch, asymmetric stretch, and bending modes, respectively. VENUSpy can sample these with:
+Water is a nonlinear molecule with three atoms, so it has three normal modes. The vibrational quanta of each mode will be sampled from a canonical ensemble with the `--INITQPa "thermal"` argument, which assumes energies in each mode are related by a temperature. The frequency of the modes dictates the distribution of quanta and their energies. With xTB, these frequencies are 3653 cm<sup>-1</sup> > 3645 cm<sup>-1</sup> > 1538 cm<sup>-1</sup> for the symmetric stretch, asymmetric stretch, and bending modes, respectively. VENUSpy can sample these with:
 
 ```
 python -u cli.py H2O.input.xyz H2O.input.xtb .  --atomsInFirstGroup "1 2 3" --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --TVIBa 298.0 --TROTa 0.0 --n_threads 1 > production.log
@@ -78,7 +78,7 @@ The resulting distribution of vibrational energies in each mode is shown in the 
 <details>
 <summary>Click here to do the example</summary>
 
-Water is a nonlinear molecule with three atoms, so it has three normal modes. The vibrational energies of each mode will be sampled from a microcanonical ensemble, which assumes uniform mixing of energies between all modes. The frequency of the modes dictates the absolute amount of energy ultimately given to a mode. With xTB, these frequencies are 3653 cm<sup>-1</sup> > 3645 cm<sup>-1</sup> > 1538 cm<sup>-1</sup> for the symmetric stretch, asymmetric stretch, and bending modes, respectively. VENUSpy can sample these with:
+Water is a nonlinear molecule with three atoms, so it has three normal modes. The vibrational energies of each mode will be sampled from a microcanonical ensemble with the `--INITQPa "microcanonical"` argument, which assumes uniform mixing of energies between all modes. The frequency of the modes dictates the absolute amount of energy ultimately given to a mode. With xTB, these frequencies are 3653 cm<sup>-1</sup> > 3645 cm<sup>-1</sup> > 1538 cm<sup>-1</sup> for the symmetric stretch, asymmetric stretch, and bending modes, respectively. VENUSpy can sample these with:
 
 ```
 python -u cli.py H2O.input.xyz H2O.input.xtb .  --atomsInFirstGroup "1 2 3" --production 100 --interval 1 --time_step 0.15 --INITQPa "microcanonical" --EVIBa 12.6372 --EROTa 0.0 --n_threads 1 > production.log
@@ -134,7 +134,7 @@ To use MOPAC, it must first be installed somehow. On Ubuntu 24.0 for example, it
 sudo apt install mopac
 ```
 
-MOPAC is a general semiempirical software which means that it can be used for most reactions of interest. We will try it out on the B + C2H2 reaction. The input files describing the geometry and PES are as follows:
+MOPAC is a general semiempirical software which means that it can be used for most reactions of interest. We will try it out on the B + C<sub>2</sub>H<sub>2</sub> reaction. The input files describing the geometry and PES are as follows:
 
 <details>
 <summary>B.C2H2.input.xyz</summary>
@@ -161,7 +161,7 @@ H     -2.684400    1.453100    0.000000
 ```
 </details>
 
-Then, any initial sampling and MD parameters can be given to this so long as the B and C2H2 are kept separate. For example, for a bimolecular collision initiated with 2.4 kcal/mol of collision energy and cold C2H2, the following command works:
+Then, any initial sampling and MD parameters can be given to this so long as the B and C<sub>2</sub>H<sub>2</sub> are kept separate. For example, for a bimolecular collision initiated with 2.4 kcal/mol of collision energy and cold C<sub>2</sub>H<sub>2</sub>, the following command works:
 
 ```
 python -u cli.py B.C2H2.input.xyz B.C2H2.input.mopac . --atomsInFirstGroup "1" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log
