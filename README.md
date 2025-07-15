@@ -49,7 +49,7 @@ pip install tblite
 ### Canonical Sampling
 
 <details>
-<summary>Click here to expand the instructions</summary>
+<summary>Click here to do the example</summary>
 
 Water is a nonlinear molecule with three atoms, so it has three normal modes. The vibrational quanta of each mode will be sampled from a canonical ensemble, which assumes energies in each mode are related by a temperature. The frequency of the modes dictates the distribution of quanta and their energies. With xTB, these frequencies are 3653 cm<sup>-1</sup> > 3645 cm<sup>-1</sup> > 1538 cm<sup>-1</sup> for the symmetric stretch, asymmetric stretch, and bending modes, respectively. VENUSpy can sample these with:
 
@@ -57,9 +57,17 @@ Water is a nonlinear molecule with three atoms, so it has three normal modes. Th
 python -u cli.py H2O.input.xyz H2O.input.xtb .  --atomsInFirstGroup "1 2 3" --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --TVIBa 298.0 --TROTa 0.0 --n_threads 1 > production.log
 ```
 
+While tracking the normal mode breakdown of energies over the entire trajectory is slow (this requires a Hessian calculation at each step), this can be done for the first frame from the initial sampling. Search for the `Evibs` keyword in the output to see energies of each mode (in eV).
+
+```
+grep Evibs production.log
+```
+
+When this is done repeatedly, we can get some statistical information by looking at the distribution of individual and total vibrational energies sampled.
+
 <img align="center" width="600" height="250" src="images/canonical.298K.png">
 
-The resulting distribution of vibrational energies in each mode is shown in the figure above. Nearly all molecules are in their ground vibrational state with energies of 0.23, 0.23, and 0.10 kcal/mol. This results in only a single possible combination of energies sampled. At higher temperatures, the higher vibrational states start to get populated. At 3000K, if we repeat the procedure, we instead see a distribution as follows:
+The resulting distribution of vibrational energies in each mode is shown in the figure above. Nearly all molecules are in their ground vibrational state with energies of 0.23, 0.23, and 0.10 kcal/mol. This results in only a single possible combination of energies sampled. At higher temperatures, the higher vibrational states start to get populated. At 3000K, if we repeat the procedure with the argument `--TVIBa 3000.0`, we instead see a distribution as follows:
 
 <img align="center" width="600" height="250" src="images/canonical.3000K.png">
 
@@ -68,17 +76,25 @@ The resulting distribution of vibrational energies in each mode is shown in the 
 ### Microcanonical Sampling
 
 <details>
-<summary>Click here to expand the instructions</summary>
+<summary>Click here to do the example</summary>
 
-Water is a nonlinear molecule with three atoms, so it has three normal modes. The vibrational energies of each mode will be sampled from a microcanonical ensemble, which assumes uniform mixing of energies between all modes. The frequency of the modes dictates the absolute amount of energy ultimately given to a mode. With xTB, these frequencies are 3653 cm-1 > 3645 cm-1 > 1538 cm-1 for the symmetric stretch, asymmetric stretch, and bending modes, respectively. VENUSpy can sample these with:
+Water is a nonlinear molecule with three atoms, so it has three normal modes. The vibrational energies of each mode will be sampled from a microcanonical ensemble, which assumes uniform mixing of energies between all modes. The frequency of the modes dictates the absolute amount of energy ultimately given to a mode. With xTB, these frequencies are 3653 cm<sup>-1</sup> > 3645 cm<sup>-1</sup> > 1538 cm<sup>-1</sup> for the symmetric stretch, asymmetric stretch, and bending modes, respectively. VENUSpy can sample these with:
 
 ```
 python -u cli.py H2O.input.xyz H2O.input.xtb .  --atomsInFirstGroup "1 2 3" --production 100 --interval 1 --time_step 0.15 --INITQPa "microcanonical" --EVIBa 12.6372 --EROTa 0.0 --n_threads 1 > production.log
 ```
 
+While tracking the normal mode breakdown of energies over the entire trajectory is slow (this requires a Hessian calculation at each step), this can be done for the first frame from the initial sampling. Search for the `Evibs` keyword in the output to see energies of each mode (in eV).
+
+```
+grep Evibs production.log
+```
+
+When this is done repeatedly, we can get some statistical information by looking at the distribution of individual and total vibrational energies sampled.
+
 <img align="center" width="600" height="250" src="images/microcanonical.12.63.png">
 
-The resulting distribution of vibrational energies in each mode is shown in the figure above. The total amount of vibrational energy is uniformly mixed over all three modes, resulting in a seemingly random distribution of combinations of energies. In this way, a microcanonical ensemble favors mixing mode energies over explicit quantizations. The same behaviour is seen at all excitations, including one corresponding to the avereage energy of the 3000K canonical ensemble from the previous example:
+The resulting distribution of vibrational energies in each mode is shown in the figure above. Although only a single total vibrational energy is sampled, the energy is uniformly mixed over all three modes, resulting in a seemingly random distribution of combinations of energies. In this way, a microcanonical ensemble favors mixing mode energies over explicit quantizations. The same behaviour is seen at all excitations, including one corresponding to the avereage energy of the 3000K canonical ensemble (21.22 kcal/mol) from the previous example. If we repeat the procedure with the argument `--EVIBa 21.220`, we then see a distribution as follows:
 
 <img align="center" width="600" height="250" src="images/microcanonical.21.22.png">
 
