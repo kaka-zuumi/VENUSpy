@@ -1292,15 +1292,6 @@ class initialSampling:
                 Nnonzeromodes = len(nonzeroEs)
                 ZPEs, amplitudes = self.getVibrationalEnergiesAndAmplitudes(nonzeroEs,[0 for nonzeroE in nonzeroEs])
 
-                reorder_flag = True
-                if reorder_flag:
-                    i1=1
-                    i2=2
-                    nonzeroModes[i1],nonzeroModes[i2] = nonzeroModes[i2],nonzeroModes[i1]
-                    ZPEs[i1],ZPEs[i2] = ZPEs[i2],ZPEs[i1]
-                    amplitudes[i1],amplitudes[i2] = amplitudes[i2],amplitudes[i1]
-                    nonzeroEs[i1],nonzeroEs[i2] = nonzeroEs[i2],nonzeroEs[i1]
-
                 tmp_nonzeroEs = list(nonzeroEs)
                 tmp_indices = list(range(Nnonzeromodes))
                 dEgrain = 0.025 # min(0.01,Evib*1.1*5.0e-3)
@@ -1351,17 +1342,6 @@ class initialSampling:
                     vibNums.append((Evibs[i]/nonzeroEs[i]) - 0.50e0)
 
                   break
-
-                if reorder_flag:
-                    i1=1
-                    i2=2
-                    nonzeroModes[i1],nonzeroModes[i2] = nonzeroModes[i2],nonzeroModes[i1]
-                    ZPEs[i1],ZPEs[i2] = ZPEs[i2],ZPEs[i1]
-                    amplitudes[i1],amplitudes[i2] = amplitudes[i2],amplitudes[i1]
-                    nonzeroEs[i1],nonzeroEs[i2] = nonzeroEs[i2],nonzeroEs[i1]
-
-                    Evibs[i1],Evibs[i2] = Evibs[i2],Evibs[i1]
-                    vibNums[i1],vibNums[i2] = vibNums[i2],vibNums[i1]
 
 
 

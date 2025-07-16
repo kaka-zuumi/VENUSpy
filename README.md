@@ -20,7 +20,7 @@ Inside the downloaded folder, you can install VENUSpy with the Atomic Simulation
 
 ```
 cd VENUSpy
-pip install venuspy
+pip install venuspython
 pip install ase
 ```
 
@@ -349,7 +349,7 @@ For Schnet, first install an appropriate version (depending on the version of th
 python3.11 -m venv .schnetmd
 source .schnetmd/bin/activate
 pip install torch==2.3 schnetpack==2.0.4 pytorch-lightning==2.2
-pip install ase venuspy
+pip install ase venuspython
 ```
 
 And then do the initial sampling and MD:
@@ -365,7 +365,7 @@ For sGDML, first install the latest version with `pip`:
 python -m venv .sgdmlmd
 source .sgdmlmd/bin/activate
 pip install sgdml
-pip install ase venuspy
+pip install ase venuspython
 ```
 
 And then do the initial sampling and MD:
@@ -412,7 +412,7 @@ python -m venv .hybridmd
 source .hybridmd/bin/activate
 pip install sgdml
 pip install tblite
-pip install ase venuspy
+pip install ase venuspython
 ```
 
 Add the argument `--MDtype "smoothed"` and you're good to go:
