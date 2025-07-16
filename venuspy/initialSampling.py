@@ -1,6 +1,7 @@
 from ase import units
 
 #from scipy.optimize import minimize, root
+from scipy.interpolate import interp1d
 from ase.optimize import QuasiNewton, LBFGS
 from ase.vibrations import Vibrations
 import random
@@ -304,6 +305,59 @@ class initialSampling:
     
         return pl, dpl
     
+    ##########################################################################################################
+
+    # Took this from: XXXXXXX
+    def beyer_swinehart(self, freq, egrain, emax, count='dos', interp=False):
+      """Beyer-Swinehart state count
+
+      Args:
+        freq (array): array of frequencies
+        egrain (int): energy grain (same unit as freq)
+        emax (int): maximum energy (same unit as freq)
+        count (str, optional): Count type - dos or sos. Defaults to 'dos'.
+        interp (bool, optional): Interpolate to make smoother. Defaults to False.
+
+      Returns:
+        array: density or sum of states
+      """
+
+      # Initialize values for counting (reduce to integers divided by egrain)
+      emax = int(round(emax/egrain))
+      freq = abs(np.array(freq)) # make all values positive
+      if type(freq) == np.float64: # to deal with only one provided frequency value
+        freq = [freq]
+      # For high egrain values, should use a multiplier for correcting the initial SOS array
+      ini_multiplier = egrain//freq[0]
+      if ini_multiplier == 0:
+        ini_multiplier = 1
+      # Set up frequencies
+      freq = [1 if f<egrain else int(round(f/egrain)) for f in freq]
+      # Set up DOS or SOS count
+      if count == 'dos':
+        bs = np.zeros(emax)
+        bs[0] = 1
+      elif count == 'sos':
+        bs = np.ones(emax) * ini_multiplier
+#       ns = np.zeros((len(freq),emax))
+      # Count the states
+      for i in range(0,len(freq)):
+        for j in range(freq[i],emax):
+          bs[j] += bs[j-freq[i]]
+#         ns[i][j] += bs[j-freq[i]]
+      # Interpolate if toggled
+      if interp:
+        bs[bs < 1] = 0
+        idx = np.nonzero(bs)
+        x = np.arange(len(bs))
+        interp = interp1d(x[idx],bs[idx],fill_value='extrapolate')
+        bs = interp(x)
+      # Divide DOS by egrain to get DOS per 1 energy unit
+      if count == 'dos':
+        bs[1:] /= egrain
+#     return bs, ns
+      return bs
+
     ##########################################################################################################
     
     # Find out the "turning points" or the bond
@@ -1082,7 +1136,6 @@ class initialSampling:
                     print("Erot:",ErotTEST)
                     print("omega:", omegaTEST)
 
-            # NEW!
             # Enter in the desired Erot and Evib, and this will produce QP
             elif (samplingMethod[Nreactant-1] == "microcanonical"):
 
@@ -1122,16 +1175,174 @@ class initialSampling:
                 for i in range(Nnonzeromodes):
                   vibNums.append((Evibs[i]/nonzeroEs[i]) - 0.50e0)
 
-###                vibNums = 0.5 + self.chooseVibrationalQuantaFromThermalDistribution(nonzeroEs,500.0)
-###                Evibs, amplitudes = self.getVibrationalEnergiesAndAmplitudes(nonzeroEs,vibNums)
-###                Evib0 = sum(Evibs)
-###                totalZPE = sum(ZPEs)
-###                for i in range(len(vibNums)):
-###                  if (vibNums[i] > 0):
-####                   vibNums[i] = ((Evibs[i] - ZPEs[i]) / nonzeroEs[i]) * ((Evib - totalZPE)/(Evib0 - totalZPE)) * vibNums[i]
-###                    vibNums[i] = ((Evib - totalZPE)/(Evib0 - totalZPE)) * vibNums[i]
-###
-###                Evibs, amplitudes = self.getVibrationalEnergiesAndAmplitudes(nonzeroEs,vibNums)
+                if (self.debug):
+                    print("nonzeroFreqs:",nonzeroEs)
+                    print("nonzeroModes:",nonzeroModes)
+                    print("Erot:",Erot)
+                    print("Evib:",sum(Evibs))
+                    print("L:", L)
+                    print("Nvibs:",[float(x) for x in vibNums])
+                    print("Evibs:",[float((x+0.5)*y) for x,y in zip (vibNums,nonzeroEs)])
+    
+                self.chooseQPgivenNandLandNormalModes(reactantIndexes,vibNums,L,nonzeroEs,nonzeroModes)
+    
+                q = self.mol.get_positions()[reactantIndexes]
+                p = self.mol.get_momenta()[reactantIndexes]
+                ErotTEST, omegaTEST = self.getErotAndOmegaFromP(masses[reactantIndexes],q,p)
+
+                if (self.debug):
+                    print("Erot:",ErotTEST)
+                    print("omega:", omegaTEST)
+
+            # NEW!
+            # Enter in the desired Erot and Evib, and this will produce QP
+            elif (samplingMethod[Nreactant-1] == "microcanonical-wigner"):
+
+                # Change these later to be changed via input file
+                Erot = rotationSampling[Nreactant-1] * (units.kcal/units.mol)
+                Evib = vibrationSampling[Nreactant-1] * (units.kcal/units.mol)
+
+                if (self.debug):
+                    print("Microcanonical sampling with Wigner rejection")
+                    print("Erot: ", Erot)
+                    print("Evib: ", Evib)
+    
+                # You must center the molecule first before calculating
+                # any angular-velocity-related property
+                self.centerMolecule(reactantIndexes)
+
+                # Choose the angular momentum vector assuming the molecule
+                # is oriented in the principal axes coordinates
+                self.rotateMolecule(reactantIndexes,axesVectors)
+                modes = self.rotateNormalModes(modes,axesVectors)
+                nonzeroModes = self.rotateNormalModes(nonzeroModes,axesVectors)
+                Erot0, L = self.chooseAngularMomentumFromSymmetricTopThermalDistribution(linear,axesMasses,300.0)
+                L = L * np.sqrt(Erot/Erot0)
+
+                Nnonzeromodes = len(nonzeroEs)
+                ZPEs, amplitudes = self.getVibrationalEnergiesAndAmplitudes(nonzeroEs,[0 for nonzeroE in nonzeroEs])
+
+                Pwigner_max = np.exp(-2*Evib/nonzeroEs[-1])  # The largest frequency determines the maximum probability
+                while True:
+
+                  # Approximate microcanonical sampling method (NOT the orthant sampling)
+                  Evibs = []
+                  Evib0 = Evib * 1.0e0
+                  for i in range(1,Nnonzeromodes):
+                    Evibs.append(Evib0 * ((1.0e0 - random.random() ** (1.0e0/(Nnonzeromodes-i)) )))
+                    Evib0 -= Evibs[-1]
+                  Evibs.append(Evib0)
+
+                  vibNums = []
+                  for i in range(Nnonzeromodes):
+                    vibNums.append((Evibs[i]/nonzeroEs[i]) - 0.50e0)
+
+                  Pwigner = np.exp(-2*sum([x+0.5e0 for x in vibNums]))
+                  Prand = random.random()*Pwigner_max
+
+                  if (self.debug):
+                    print("Wigner rejection: ", Pwigner, ">=", Prand, "?")
+
+                  if (Pwigner >= Prand): break   # Von Neumann rejection
+
+                if (self.debug):
+                    print("nonzeroFreqs:",nonzeroEs)
+                    print("nonzeroModes:",nonzeroModes)
+                    print("Erot:",Erot)
+                    print("Evib:",sum(Evibs))
+                    print("L:", L)
+                    print("Nvibs:",[float(x) for x in vibNums])
+                    print("Evibs:",[float((x+0.5)*y) for x,y in zip (vibNums,nonzeroEs)])
+    
+                self.chooseQPgivenNandLandNormalModes(reactantIndexes,vibNums,L,nonzeroEs,nonzeroModes)
+    
+                q = self.mol.get_positions()[reactantIndexes]
+                p = self.mol.get_momenta()[reactantIndexes]
+                ErotTEST, omegaTEST = self.getErotAndOmegaFromP(masses[reactantIndexes],q,p)
+
+                if (self.debug):
+                    print("Erot:",ErotTEST)
+                    print("omega:", omegaTEST)
+
+            # NEW!
+            # Enter in the desired Erot and Evib, and this will produce QP
+            elif (samplingMethod[Nreactant-1] == "microcanonical-quantum"):
+
+                # Change these later to be changed via input file
+                Erot = rotationSampling[Nreactant-1] * (units.kcal/units.mol)
+                Evib = vibrationSampling[Nreactant-1] * (units.kcal/units.mol)
+
+                if (self.debug):
+                    print("Microcanonical sampling with Wigner rejection")
+                    print("Erot: ", Erot)
+                    print("Evib: ", Evib)
+    
+                # You must center the molecule first before calculating
+                # any angular-velocity-related property
+                self.centerMolecule(reactantIndexes)
+
+                # Choose the angular momentum vector assuming the molecule
+                # is oriented in the principal axes coordinates
+                self.rotateMolecule(reactantIndexes,axesVectors)
+                modes = self.rotateNormalModes(modes,axesVectors)
+                nonzeroModes = self.rotateNormalModes(nonzeroModes,axesVectors)
+                Erot0, L = self.chooseAngularMomentumFromSymmetricTopThermalDistribution(linear,axesMasses,300.0)
+                L = L * np.sqrt(Erot/Erot0)
+
+                Nnonzeromodes = len(nonzeroEs)
+                ZPEs, amplitudes = self.getVibrationalEnergiesAndAmplitudes(nonzeroEs,[0 for nonzeroE in nonzeroEs])
+
+                tmp_nonzeroEs = list(nonzeroEs)
+                tmp_indices = list(range(Nnonzeromodes))
+                dEgrain = 0.025 # min(0.01,Evib*1.1*5.0e-3)
+                DOSs = []
+                next_indices = []
+                for i in range(Nnonzeromodes-1):
+                    tmp_nonzeroEs.pop()
+                    next_index = tmp_indices.pop()
+                    next_indices.append(next_index)
+                    states = self.beyer_swinehart(tmp_nonzeroEs, dEgrain, Evib*1.1, count='dos', interp=False)
+                    DOSs.append(states)
+
+                if (DOSs[0][round((Evib - 0.5e0*sum(nonzeroEs)) // dEgrain)] == 0):
+                  raise ValueError("Quantum microcanonical ensemble does not a vibrational state with exactly {:.3f} kcal/mol energy".format(Evib/(units.kcal/units.mol)))
+
+                while True:
+
+                  # Approximate microcanonical sampling method (NOT the orthant sampling)
+                  Evibs = []
+                  Evib0 = Evib * 1.0e0 - 0.5e0*sum(nonzeroEs)   # Take out the ZPE
+                  for next_index,dos in zip(next_indices,DOSs):
+                    while True:
+                      Evib_chosen = round(random.random() * Evib0 / nonzeroEs[next_index]) * nonzeroEs[next_index]
+                      Pquantum = dos[int((Evib0-Evib_chosen) // dEgrain)] / dos[int((Evib0) // dEgrain)]
+                      Prand = random.random()
+                      if (self.debug): print("MicrocanonicalQuantum rejection: ", Pquantum, ">=", Prand, "? for mode", next_index, "Evib_left:", Evib0-Evib_chosen)
+                      if (Pquantum > Prand): break
+                    Evibs.insert(0,Evib_chosen)
+                    Evib0 -= Evibs[0]
+                    if (next_index == 2): break
+
+                  candidateEvib12s = []
+                  for n1 in range(1+int(Evib0//nonzeroEs[0])):
+                    Evib1 = n1 * nonzeroEs[0]
+                    for n2 in range(1+int(Evib0//nonzeroEs[1])):
+                      Evib2 = n2 * nonzeroEs[1]
+                      if (np.abs(Evib1+Evib2-Evib0) < dEgrain):
+                        candidateEvib12s.append([Evib1,Evib2])
+                        
+                  if (len(candidateEvib12s) == 0):
+                    if (self.debug): print("Warning: inconsistency in microcanonical-quantum sampling ... will try to resample...")
+                    continue
+                  tmpEvibs = random.choice(candidateEvib12s) + Evibs
+                  Evibs = [float(x + 0.5e0*y) for x,y in zip(tmpEvibs,nonzeroEs)]
+
+                  vibNums = []
+                  for i in range(Nnonzeromodes):
+                    vibNums.append((Evibs[i]/nonzeroEs[i]) - 0.50e0)
+
+                  break
+
 
                 if (self.debug):
                     print("nonzeroFreqs:",nonzeroEs)
