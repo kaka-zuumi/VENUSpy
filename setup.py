@@ -9,7 +9,8 @@ setup(
    author='Kazuumi Fujioka',
    author_email='kazuumi@hawaii.edu',
    url="https://github.com/kaka-zuumi/VENUSpy",
-   packages=['venuspy'],
+#  packages=['venuspy'],
+   packages=find_packages(include=['venuspy'],exclude=['images','examples']),  #same as name
    install_requires=['numpy', 'scipy', 'ase'], #external packages as dependencies
    scripts=[
             'cli.py',
