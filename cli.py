@@ -130,7 +130,7 @@ parser.add_argument("--Edriftmax", type=float, help="The maximum change in total
 parser.add_argument("--E0", type=float, help="The initial total energy to track the drift in total energy (e.g. if the trajectory is being restarted)",default=None)
 parser.add_argument("--n_threads", type=int, help="The number of threads to ask psi4 to use")
 
-parser.add_argument("--INITQPa", type=str, help="Initial sampling method for atoms in first group ('semiclassical', 'microcanonical', 'thermal', or None)", default=None)
+parser.add_argument("--INITQPa", type=str, help="Initial sampling method for atoms in first group ('semiclassical', 'microcanonical', 'thermal', or None)", default="")
 parser.add_argument("--NVIBa", type=int, help="Vibrational quantum number of atoms in first group (supply if using the 'semiclassical' initial sampling)")
 parser.add_argument("--NROTa", type=int, help="Rotational quantum number of atoms in first group (supply if using the 'semiclassical' initial sampling)")
 parser.add_argument("--EVIBa", type=float, help="Vibrational energy of atoms in first group (supply if using the 'microcanonical' initial sampling)")
@@ -138,7 +138,7 @@ parser.add_argument("--EROTa", type=float, help="Rotational energy of atoms in f
 parser.add_argument("--TVIBa", type=float, help="Vibrational temperature of atoms in first group (supply if using the 'thermal' initial sampling)")
 parser.add_argument("--TROTa", type=float, help="Rotational temperature of atoms in first group (supply if using the 'thermal' initial sampling)")
 
-parser.add_argument("--INITQPb", type=str, help="Initial sampling method for atoms in second group ('semiclassical', 'microcanonical', 'thermal', or None)", default=None)
+parser.add_argument("--INITQPb", type=str, help="Initial sampling method for atoms in second group ('semiclassical', 'microcanonical', 'thermal', or None)", default="")
 parser.add_argument("--NVIBb", type=int, help="Vibrational quantum number of atoms in second group (supply if using the 'semiclassical' initial sampling)")
 parser.add_argument("--NROTb", type=int, help="Rotational quantum number of atoms in second group (supply if using the 'semiclassical' initial sampling)")
 parser.add_argument("--EVIBb", type=float, help="Vibrational energy of atoms in second group (supply if using the 'microcanonical' initial sampling)")
@@ -204,7 +204,7 @@ rotationSampling = []
 if (samplingMethod[0] == "semiclassical"):
   vibrationSampling.append(args["NVIBa"])
   rotationSampling.append(args["NROTa"])
-elif (samplingMethod[0] == "microcanonical"):
+elif ("microcanonical" in samplingMethod[0]):
   vibrationSampling.append(args["EVIBa"])
   rotationSampling.append(args["EROTa"])
 else:
@@ -213,7 +213,7 @@ else:
 if (samplingMethod[1] == "semiclassical"):
   vibrationSampling.append(args["NVIBb"])
   rotationSampling.append(args["NROTb"])
-elif (samplingMethod[1] == "microcanonical"):
+elif ("microcanonical" in samplingMethod[1]):
   vibrationSampling.append(args["EVIBb"])
   rotationSampling.append(args["EROTb"])
 else:
