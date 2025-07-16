@@ -1067,8 +1067,10 @@ class initialSampling:
                     print("nonzeroFreqs:",nonzeroEs)
                     print("nonzeroModes:",nonzeroModes)
                     print("Erot:",Erot)
+                    print("Evib:",sum([float((x+0.5)*y) for x,y in zip (vibNums,nonzeroEs)]))
                     print("L:", L)
-                    print("Nvib:",vibNums)
+                    print("Nvibs:",[float(x) for x in vibNums])
+                    print("Evibs:",[float((x+0.5)*y) for x,y in zip (vibNums,nonzeroEs)])
     
                 self.chooseQPgivenNandLandNormalModes(reactantIndexes,vibNums,L,nonzeroEs,nonzeroModes)
     
@@ -1137,7 +1139,8 @@ class initialSampling:
                     print("Erot:",Erot)
                     print("Evib:",sum(Evibs))
                     print("L:", L)
-                    print("Nvib:",vibNums)
+                    print("Nvibs:",[float(x) for x in vibNums])
+                    print("Evibs:",[float((x+0.5)*y) for x,y in zip (vibNums,nonzeroEs)])
     
                 self.chooseQPgivenNandLandNormalModes(reactantIndexes,vibNums,L,nonzeroEs,nonzeroModes)
     
