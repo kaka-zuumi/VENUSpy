@@ -22,5 +22,11 @@ version = {attr = "venuspy.__version__"}
 [tool.setuptools]
 py-modules = ["venuspy"]
 
+[tool.setuptools.packages.find]
+where = ["."]  # list of folders that contain the packages (["."] by default)
+include = ["venuspy"]  # package names should match these glob patterns (["*"] by default)
+exclude = []  # exclude packages matching these glob patterns (empty by default)
+namespaces = false  # to disable scanning PEP 420 namespaces (true by default)
+
 [project.scripts]
-spam-cli = "venuspy:cli"
+venuspy-cli = "venuspy:cli"
