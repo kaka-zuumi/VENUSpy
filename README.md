@@ -24,7 +24,7 @@ pip install venuspython
 pip install ase
 ```
 
-The file `cli.py` can be run with your favourite Python environment so long as the appropriate packages can be installed. Then, input files and command line arguments can be supplied to it.
+The file `cli.py` can be run with your favourite Python environment so long as the appropriate packages can be installed; if installed with pip, then it can also be accessed with the alias `venuspy-cli`. Then, input files and command line arguments can be supplied to it.
 
 There are three key features in VENUSpy:
 - [Sampling Methods](#sampling-methods)
@@ -54,7 +54,7 @@ pip install tblite
 Water is a nonlinear molecule with three atoms, so it has three normal modes. The vibrational quanta of each mode will be sampled from a canonical ensemble with the `--INITQPa "thermal"` argument, which assumes energies in each mode are related by a temperature. The frequency of the modes dictates the distribution of quanta and their energies. With xTB, these frequencies are 3653 cm<sup>-1</sup> > 3645 cm<sup>-1</sup> > 1538 cm<sup>-1</sup> for the symmetric stretch, asymmetric stretch, and bending modes, respectively. VENUSpy can sample these with:
 
 ```
-python -u cli.py examples/H2O.input.xyz examples/H2O.input.xtb .  --atomsInFirstGroup "1 2 3" --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --TVIBa 298.0 --TROTa 0.001 --n_threads 1 > production.log
+venuspy-cli examples/H2O.input.xyz examples/H2O.input.xtb .  --atomsInFirstGroup "1 2 3" --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --TVIBa 298.0 --TROTa 0.001 --n_threads 1 > production.log
 ```
 
 While tracking the normal mode breakdown of energies over the entire trajectory is slow (this requires a Hessian calculation at each step), this can be done for the first frame from the initial sampling. Search for the `Evibs` keyword in the output to see energies of each mode (in eV).
@@ -81,7 +81,7 @@ The resulting distribution of vibrational energies in each mode is shown in the 
 Water is a nonlinear molecule with three atoms, so it has three normal modes. The vibrational energies of each mode will be sampled from a microcanonical ensemble with the `--INITQPa "microcanonical"` argument, which assumes uniform mixing of energies between all modes. The frequency of the modes dictates the absolute amount of energy ultimately given to a mode. With xTB, these frequencies are 3653 cm<sup>-1</sup> > 3645 cm<sup>-1</sup> > 1538 cm<sup>-1</sup> for the symmetric stretch, asymmetric stretch, and bending modes, respectively. VENUSpy can sample these with:
 
 ```
-python -u cli.py examples/H2O.input.xyz examples/H2O.input.xtb .  --atomsInFirstGroup "1 2 3" --production 100 --interval 1 --time_step 0.15 --INITQPa "microcanonical" --EVIBa 12.6372 --EROTa 0.00001 --n_threads 1 > production.log
+venuspy-cli examples/H2O.input.xyz examples/H2O.input.xtb .  --atomsInFirstGroup "1 2 3" --production 100 --interval 1 --time_step 0.15 --INITQPa "microcanonical" --EVIBa 12.6372 --EROTa 0.00001 --n_threads 1 > production.log
 ```
 
 While tracking the normal mode breakdown of energies over the entire trajectory is slow (this requires a Hessian calculation at each step), this can be done for the first frame from the initial sampling. Search for the `Evibs` keyword in the output to see energies of each mode (in eV).
@@ -110,7 +110,7 @@ Finally, there is one more special case for diatomic molecules. Because polyatom
 Let's do an example for the OH radical with the same software, for the N=2,J=5 rovibrational state:
 
 ```
-python -u cli.py examples/OH.input.xyz examples/OH.input.xtb .  --atomsInFirstGroup "1 2" --production 100 --interval 1 --time_step 0.15 --INITQPa "semiclassical" --NVIBa 2 --NROTa 5 --n_threads 1 > production.log
+venuspy-cli examples/OH.input.xyz examples/OH.input.xtb .  --atomsInFirstGroup "1 2" --production 100 --interval 1 --time_step 0.15 --INITQPa "semiclassical" --NVIBa 2 --NROTa 5 --n_threads 1 > production.log
 ```
 
 Note that, with the semiclassical method, the rovibrational states' energies are not known a priori, as they are not approximated from the normal mode frequencies. Thus, only specific rovibrational states (N,J) can be sampled rather than ensembles. However, the ensemble of phases for a state are still sampled.
@@ -164,7 +164,7 @@ H     -2.684400    1.453100    0.000000
 Then, any initial sampling and MD parameters can be given to this so long as the B and C<sub>2</sub>H<sub>2</sub> are kept separate. For example, for a bimolecular collision initiated with 2.4 kcal/mol of collision energy and cold C<sub>2</sub>H<sub>2</sub>, the following command works:
 
 ```
-python -u cli.py examples/B.C2H2.input.xyz examples/B.C2H2.input.mopac . --atomsInFirstGroup "1" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log
+venuspy-cli examples/B.C2H2.input.xyz examples/B.C2H2.input.mopac . --atomsInFirstGroup "1" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log
 ```
 
 Sometimes the SCF calculation in MOPAC does not converge which leads to the error: `ase.calculators.calculator.CalculationFailed: ... failed`. This happens about 1/5 times for this system; restarting it often resolves this.
@@ -217,7 +217,7 @@ referencemethod uhf
 Similar to the MOPAC implementation, any initial sampling and MD parameters can be given to this so long as the B and C<sub>2</sub>H<sub>2</sub> are kept separate. For example, for a bimolecular collision initiated with 2.4 kcal/mol of collision energy and cold C<sub>2</sub>H<sub>2</sub>, the following command works:
 
 ```
-python -u cli.py examples/B.C2H2.input.xyz examples/B.C2H2.input.psi4 . --atomsInFirstGroup "1" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log
+venuspy-cli examples/B.C2H2.input.xyz examples/B.C2H2.input.psi4 . --atomsInFirstGroup "1" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log
 ```
 
 While PSI4 is parallelized, it is a full electronic structure calculation so it takes more than a minute to do the molecular dynamics, let alone the initial sampling. By default, if there are convergence issues at any step of the initial sampling or dynamics, the ab initio calculation is restarted with slightly different or looser parameters. We suggest skipping a full trajectory simulation if trying this as a test.
@@ -268,7 +268,7 @@ H     -2.684400    1.453100    0.000000
 Similar to the MOPAC implementation, any initial sampling and MD parameters can be given to this so long as the B and C<sub>2</sub>H<sub>2</sub> are kept separate. For example, for a bimolecular collision initiated with 2.4 kcal/mol of collision energy and cold C<sub>2</sub>H<sub>2</sub>, the following command works:
 
 ```
-python -u cli.py examples/B.C2H2.input.xyz examples/B.C2H2.input.xtb . --atomsInFirstGroup "1" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log
+venuspy-cli examples/B.C2H2.input.xyz examples/B.C2H2.input.xtb . --atomsInFirstGroup "1" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log
 ```
 
 Sometimes the xTB calculation does not converge. By default, VENUSpy restarts the calculation a few times with slightly different parameters to try to save the trajectory.
@@ -320,7 +320,7 @@ Q1-Sgm    chempotpy O3 O3_6_5Ap_2023 0
 Then, any initial sampling and MD parameters can be given to this. For example, for a bimolecular collision initiated with 2.4 kcal/mol of collision energy and cold O2, the following command works:
 
 ```
-python -u cli.py examples/O.O2.input.xyz examples/O.O2.input.chempotpy . --atomsInFirstGroup "1" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log
+venuspy-cli examples/O.O2.input.xyz examples/O.O2.input.chempotpy . --atomsInFirstGroup "1" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log
 ```
 
 </details>
@@ -355,7 +355,7 @@ pip install ase venuspython
 And then do the initial sampling and MD:
 
 ```
-python -u cli.py examples/CH.C4H6.input.xyz examples/MLmodels/CHC4H6/best_inference_model . --atomsInFirstGroup "1 2" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log
+venuspy-cli examples/CH.C4H6.input.xyz examples/MLmodels/CHC4H6/best_inference_model . --atomsInFirstGroup "1 2" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log
 ```
 
 
@@ -371,7 +371,7 @@ pip install ase venuspython
 And then do the initial sampling and MD:
 
 ```
-python -u cli.py examples/HBr.HCl.input.xyz examples/MLmodels/HBrHCl/model-train8000-sym2-sig0050.npz . --atomsInFirstGroup "1 2" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log
+venuspy-cli examples/HBr.HCl.input.xyz examples/MLmodels/HBrHCl/model-train8000-sym2-sig0050.npz . --atomsInFirstGroup "1 2" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log
 ```
 
 For Physnet, first download the latest version from github and install tensorflow:
@@ -395,7 +395,7 @@ sed -i 's/from importlib.metadata import entry_points/from importlib_metadata im
 And then do the initial sampling and MD:
 
 ```
-python -u cli.py examples/CH.SH2.input.xyz examples/MLmodels/CHSH2/model.physnet.config . --atomsInFirstGroup "1 2" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log 2> /dev/null
+venuspy-cli examples/CH.SH2.input.xyz examples/MLmodels/CHSH2/model.physnet.config . --atomsInFirstGroup "1 2" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 100 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log 2> /dev/null
 ```
 
 </details>
@@ -418,7 +418,7 @@ pip install ase venuspython
 Add the argument `--MDtype "smoothed"` and you're good to go:
 
 ```
-python -u cli.py examples/B.C2H2.input.xyz examples/B.C2H2.input.xtb . --MDtype "smoothed" --atomsInFirstGroup "1" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 5000 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log
+venuspy-cli examples/B.C2H2.input.xyz examples/B.C2H2.input.xtb . --MDtype "smoothed" --atomsInFirstGroup "1" --collisionEnergy 2.4 --impactParameter 1.0 --centerOfMassDistance 10.0 --production 5000 --interval 1 --time_step 0.15 --INITQPa "thermal" --INITQPb "thermal" --TVIBa 300.0 --TROTa 300.0 --TVIBb 10.0 --TROTb 10.0 --n_threads 1 > production.log
 ```
 
 The xTB software, although not a completely ab initio theory, uses similar kinds of SCF methods and also runs into convergence problems. Over the course of the 5000 steps simulated, it often will have two or three energy drift/jump issues. When this happens, the sGDML surface quickly trains on the local surface and tries to save the trajectory. After some number of steps, the xTB method takes over again.
