@@ -19,15 +19,15 @@ dynamic = ["version", "readme"]
 readme = {file = ["README.md"], content-type = "text/markdown"}
 version = {attr = "venuspy.__version__"}
 
-#[tool.setuptools]
-#packages = ["venuspy"]
+[tool.setuptools]
+packages = ["venuspy","venuspy.calc"]
 #py_modules = ["venuspy"]
 
-[tool.setuptools.packages.find]
-where = ["."]  # list of folders that contain the packages (["."] by default)
-include = ["venuspy"]  # package names should match these glob patterns (["*"] by default)
-exclude = ["*images*", "*examples*"]  # exclude packages matching these glob patterns (empty by default)
-namespaces = false  # to disable scanning PEP 420 namespaces (true by default)
+#[tool.setuptools.packages.find]
+#where = ["."]  # list of folders that contain the packages (["."] by default)
+#include = ["venuspy"]  # package names should match these glob patterns (["*"] by default)
+#exclude = ["*images*", "*examples*"]  # exclude packages matching these glob patterns (empty by default)
+#namespaces = false  # to disable scanning PEP 420 namespaces (true by default)
 
 [project.scripts]
 venuspy-cli = "venuspy:cli"
