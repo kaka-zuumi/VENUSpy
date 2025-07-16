@@ -30,7 +30,7 @@ packages = ["venuspy","venuspy.calc"]
 #namespaces = false  # to disable scanning PEP 420 namespaces (true by default)
 
 [project.scripts]
-venuspy-cli = "venuspy:cli"
+venuspy-cli = "venuspy.cli:main"
 
 [tool.setuptools.package-data]
 myModule = ["images/*"]
