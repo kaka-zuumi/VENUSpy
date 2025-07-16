@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0.0", "wheel", "ase"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "venuspy"
+name = "venuspython"
 description = "VENUSpy Initial Sampling and Molecular Dynamics"
 keywords = ["moleculardynamics", "initialsampling"]
 classifiers = ["Development Status :: 5 - Production/Stable",
@@ -19,9 +19,9 @@ dynamic = ["version", "readme"]
 readme = {file = ["README.md"], content-type = "text/markdown"}
 version = {attr = "venuspy.__version__"}
 
-[tool.setuptools]
-packages = ["venuspy"]
-py_modules = ["venuspy"]
+#[tool.setuptools]
+#packages = ["venuspy"]
+#py_modules = ["venuspy"]
 
 [tool.setuptools.packages.find]
 where = ["."]  # list of folders that contain the packages (["."] by default)
@@ -31,3 +31,6 @@ namespaces = false  # to disable scanning PEP 420 namespaces (true by default)
 
 [project.scripts]
 venuspy-cli = "venuspy:cli"
+
+[tool.setuptools.package-data]
+myModule = ["images/*"]
