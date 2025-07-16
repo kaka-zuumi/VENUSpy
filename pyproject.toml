@@ -15,10 +15,6 @@ classifiers = ["Development Status :: 5 - Production/Stable",
 requires-python = ">=3.7"
 dynamic = ["version", "readme"]
 
-[find]
-include = ["venuspy"]  # package names should match these glob patterns (["*"] by default)
-exclude = ["*images*", "*examples*"]  # exclude packages matching these glob patterns (empty by default)
-
 [tool.setuptools.dynamic]
 readme = {file = ["README.md"], content-type = "text/markdown"}
 version = {attr = "venuspy.__version__"}
