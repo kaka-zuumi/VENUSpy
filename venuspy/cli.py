@@ -104,6 +104,8 @@ except ImportError:
 
 def main():
 
+    global r2threshold
+
     parser = argparse.ArgumentParser(description="Do a single MD trajectory using a initial geometry (and momenta) and a sGDML model",formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("initialGeometryFile", type=str, help="XYZ file with initial geometry; if initial conditions are sampled in the script, then this argument is required but is just an example XYZ")
     parser.add_argument("PESinputFile", type=str, help="PES input file (may be a psi4 input file or a sGDML .npz model)")
