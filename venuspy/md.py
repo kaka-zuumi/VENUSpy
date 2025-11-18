@@ -44,12 +44,12 @@ def printenergy(a,step,energyflag=""):
       epot = 0.0
       ekin = a.get_kinetic_energy() / (units.kcal/units.mol)
       print('@Epot = %.3f  Ekin = %.3f (T=%3.0fK)  '
-            'Etot = %.3f  kcal/mol Step = %8d   %s' % (epot, ekin, ekin / (len(a) * 1.5 * 8.617281e-5), epot + ekin, step, energyflag))
+            'Etot = %.3f  kcal/mol Step = %8d   %s' % (epot, ekin, ekin / (len(a) * 1.5 * 8.617281e-5), epot + ekin, step, energyflag),flush=True)
     else:
       epot = a.get_potential_energy() / (units.kcal/units.mol)
       ekin = a.get_kinetic_energy() / (units.kcal/units.mol)
       print('@Epot = %.3f  Ekin = %.3f (T=%3.0fK)  '
-            'Etot = %.3f  kcal/mol Step = %8d   %s' % (epot, ekin, ekin / (len(a) * 1.5 * 8.617281e-5), epot + ekin, step, energyflag))
+            'Etot = %.3f  kcal/mol Step = %8d   %s' % (epot, ekin, ekin / (len(a) * 1.5 * 8.617281e-5), epot + ekin, step, energyflag),flush=True)
 
 
 # A function to see if any interatomic distance is > 20 

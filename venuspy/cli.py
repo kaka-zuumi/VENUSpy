@@ -24,38 +24,38 @@ from .md import regularMD, pingpongMD, smoothedMD, r2threshold
 try:
   from .calc.bagelcalc import bagelcalculator
 except ImportError:
-  print("WARNING: BAGEL has not been loaded ... it will not be available for initial sampling")
+  print("#VENUS WARNING: BAGEL HAS NOT BEEN LOADED ... IT WILL NOT BE AVAILABLE FOR INITIAL SAMPLING")
 
 # Try importing psi4
 try:
   from .calc.psi4calc import psi4calculator
 except ImportError:
-  print("WARNING: psi4 has not been loaded ... it will not be available for initial sampling")
+  print("#VENUS WARNING: PSI4 HAS NOT BEEN LOADED ... IT WILL NOT BE AVAILABLE FOR INITIAL SAMPLING")
 
 # Try importing xtb (fast, semi-empirical DFT):
 try:
 # from tblite.ase import TBLite
   from .calc.xtbcalc import TBLite
 except ImportError:
-  print("WARNING: xtb has not been loaded ... it will not be available for initial sampling")
+  print("#VENUS WARNING: XTB HAS NOT BEEN LOADED ... IT WILL NOT BE AVAILABLE FOR INITIAL SAMPLING")
 
 # Try import NWChem (not NWChemEx)
 try:
   from .calc.nwchemcalc import nwchemcalculator
 except ImportError:
-  print("WARNING: NWChem has not been loaded ... it will not be available for initial sampling")
+  print("#VENUS WARNING: NWCHEM HAS NOT BEEN LOADED ... IT WILL NOT BE AVAILABLE FOR INITIAL SAMPLING")
 
 # Try importing NWChemEx
 try:
   from .calc.nwchemexcalc import nwchemexcalculator
 except ImportError:
-  print("WARNING: NWChemEx has not been loaded ... it will not be available for initial sampling")
+  print("#VENUS WARNING: NWCHEMEX HAS NOT BEEN LOADED ... IT WILL NOT BE AVAILABLE FOR INITIAL SAMPLING")
 
 # Try importing QCEngine/GAMESS
 try:
   from .calc.qcengineGAMESScalc import qcengineGAMESScalculator
 except ImportError:
-  print("WARNING: QCEngine/GAMESS has not been loaded ... it will not be available for initial sampling")
+  print("#VENUS WARNING: QCENGINE/GAMESS HAS NOT BEEN LOADED ... IT WILL NOT BE AVAILABLE FOR INITIAL SAMPLING")
 
 # Try importing sGDML
 try:
@@ -67,26 +67,26 @@ try:
   from .calc.minisgdmlcalc import miniSGDMLCalculator
 
 except ImportError:
-  print("WARNING: sGDML has not been loaded ... it will not be available for initial sampling")
+  print("#VENUS WARNING: SGDML HAS NOT BEEN LOADED ... IT WILL NOT BE AVAILABLE FOR INITIAL SAMPLING")
 
 # Try importing chempotpy
 try:
   from .calc.chempotpycalc import chempotpyCalculator
 except ImportError:
-  print("WARNING: chempotpy has not been loaded ... it will not be available for initial sampling")
+  print("#VENUS WARNING: CHEMPOTPY HAS NOT BEEN LOADED ... IT WILL NOT BE AVAILABLE FOR INITIAL SAMPLING")
 
 # Try importing Schnet
 try:
   import schnetpack as spk
   import torch
 except ImportError:
-  print("WARNING: Schnet has not been loaded ... it will not be available for initial sampling")
+  print("#VENUS WARNING: SCHNET HAS NOT BEEN LOADED ... IT WILL NOT BE AVAILABLE FOR INITIAL SAMPLING")
 
 # Try importing Physnet
 try:
   from .calc.physnetcalc import PNCalculator
 except ImportError:
-  print("WARNING: Physnet has not been loaded ... it will not be available for initial sampling")
+  print("#VENUS WARNING: PHYSNET HAS NOT BEEN LOADED ... IT WILL NOT BE AVAILABLE FOR INITIAL SAMPLING")
 
 
 
@@ -130,37 +130,24 @@ def main():
     parser.add_argument("--E0", type=float, help="The initial total energy to track the drift in total energy (e.g. if the trajectory is being restarted)",default=None)
     parser.add_argument("--n_threads", type=int, help="The number of threads to ask psi4 to use")
     
-    parser.add_argument("--INITQPa", type=str, help="Initial sampling method for atoms in first group ('semiclassical', 'microcanonical', 'thermal', or None)", default="")
+    parser.add_argument("--INITQPa", type=str, help="Initial sampling method for atoms in first group ('semiclassical', 'microcanonical', 'thermal', 'microcanonicalnormalmode', or None)", default="")
     parser.add_argument("--NVIBa", type=int, help="Vibrational quantum number of atoms in first group (supply if using the 'semiclassical' initial sampling)")
     parser.add_argument("--NROTa", type=int, help="Rotational quantum number of atoms in first group (supply if using the 'semiclassical' initial sampling)")
+    parser.add_argument("--EVIBNMODESa", type=str, help="List of normal mode vibrational energies of atoms in first group (supply if using the 'microcanonicalnormalmode' initial sampling)")
     parser.add_argument("--EVIBa", type=float, help="Vibrational energy of atoms in first group (supply if using the 'microcanonical' initial sampling)")
     parser.add_argument("--EROTa", type=float, help="Rotational energy of atoms in first group (supply if using the 'microcanonical' initial sampling)")
     parser.add_argument("--TVIBa", type=float, help="Vibrational temperature of atoms in first group (supply if using the 'thermal' initial sampling)")
     parser.add_argument("--TROTa", type=float, help="Rotational temperature of atoms in first group (supply if using the 'thermal' initial sampling)")
     
-    parser.add_argument("--INITQPb", type=str, help="Initial sampling method for atoms in second group ('semiclassical', 'microcanonical', 'thermal', or None)", default="")
+    parser.add_argument("--INITQPb", type=str, help="Initial sampling method for atoms in second group ('semiclassical', 'microcanonical', 'thermal', 'microcanonicalnormalmode', or None)", default="")
     parser.add_argument("--NVIBb", type=int, help="Vibrational quantum number of atoms in second group (supply if using the 'semiclassical' initial sampling)")
     parser.add_argument("--NROTb", type=int, help="Rotational quantum number of atoms in second group (supply if using the 'semiclassical' initial sampling)")
+    parser.add_argument("--EVIBNMODESb", type=str, help="List of normal mode vibrational energies of atoms in second group (supply if using the 'microcanonicalnormalmode' initial sampling)")
     parser.add_argument("--EVIBb", type=float, help="Vibrational energy of atoms in second group (supply if using the 'microcanonical' initial sampling)")
     parser.add_argument("--EROTb", type=float, help="Rotational energy of atoms in second group (supply if using the 'microcanonical' initial sampling)")
     parser.add_argument("--TVIBb", type=float, help="Vibrational temperature of atoms in second group (supply if using the 'thermal' initial sampling)")
     parser.add_argument("--TROTb", type=float, help="Rotational temperature of atoms in second group (supply if using the 'thermal' initial sampling)")
     args = vars(parser.parse_args())
-    
-    ########################################################################################
-    
-    # A function to print the potential, kinetic and total energy
-    def printenergy(a,step,energyflag):
-        if ("ERROR" in energyflag):
-          epot = 0.0
-          ekin = a.get_kinetic_energy() / (units.kcal/units.mol)
-          print('@Epot = %.3f  Ekin = %.3f (T=%3.0fK)  '
-                'Etot = %.3f  kcal/mol Step = %8d   %s' % (epot, ekin, ekin / (len(a) * 1.5 * 8.617281e-5), epot + ekin, step, energyflag))
-        else:
-          epot = a.get_potential_energy() / (units.kcal/units.mol)
-          ekin = a.get_kinetic_energy() / (units.kcal/units.mol)
-          print('@Epot = %.3f  Ekin = %.3f (T=%3.0fK)  '
-                'Etot = %.3f  kcal/mol Step = %8d   %s' % (epot, ekin, ekin / (len(a) * 1.5 * 8.617281e-5), epot + ekin, step, energyflag))
     
     ########################################################################################
     
@@ -193,18 +180,29 @@ def main():
     optimize_flag = args["optimize"]
     
     if ((Nsteps is None) or (Nprint is None) or (dt is None)):
-      raise ValueError("For MD, need to specify these three: --production --interval --time_step")
+      raise ValueError("#VENUS FOR MD, NEED TO SPECIFY THESE THREE ARGUMENTS: --production --interval --time_step")
     
     n_threads = args["n_threads"]
     if (n_threads is None): n_threads = 1
     
+
     samplingMethod      = [ args["INITQPa"], args["INITQPb"] ]
     vibrationSampling = []
     rotationSampling = []
     if (samplingMethod[0] == "semiclassical"):
       vibrationSampling.append(args["NVIBa"])
       rotationSampling.append(args["NROTa"])
-    elif ("microcanonical" in samplingMethod[0]):
+    elif (samplingMethod[0] == "microcanonicalnormalmode"):
+      normalmodeinput = args["EVIBNMODESa"]
+      try:
+        vibrationSampling.append([float(x) for x in normalmodeinput.split(",")])
+      except:
+        raise ValueError("#VENUS ERROR IN READING NORMAL MODE SAMPLING INPUTS (EVIBNMODESA) ... SHOULD BE COMMA-SEPARATED STRING OF VIBRATIONAL ENERGIES FOR EACH MODE")
+      rotationSampling.append(args["EROTa"])
+    elif (samplingMethod[0] == "microcanonical"):
+      vibrationSampling.append(args["EVIBa"])
+      rotationSampling.append(args["EROTa"])
+    elif (samplingMethod[0] == "microcanonical-quantum"):
       vibrationSampling.append(args["EVIBa"])
       rotationSampling.append(args["EROTa"])
     else:
@@ -213,12 +211,23 @@ def main():
     if (samplingMethod[1] == "semiclassical"):
       vibrationSampling.append(args["NVIBb"])
       rotationSampling.append(args["NROTb"])
-    elif ("microcanonical" in samplingMethod[1]):
+    elif (samplingMethod[1] == "microcanonicalnormalmode"):
+      normalmodeinput = args["EVIBNMODESb"]
+      try:
+        vibrationSampling.append([float(x) for x in normalmodeinput.split(",")])
+      except:
+        raise ValueError("#VENUS ERROR IN READING NORMAL MODE SAMPLING INPUTS (EVIBNMODESB) ... SHOULD BE COMMA-SEPARATED STRING OF VIBRATIONAL ENERGIES FOR EACH MODE")
+      rotationSampling.append(args["EROTb"])
+    elif (samplingMethod[1] == "microcanonical"):
+      vibrationSampling.append(args["EVIBb"])
+      rotationSampling.append(args["EROTb"])
+    elif (samplingMethod[1] == "microcanonical-quantum"):
       vibrationSampling.append(args["EVIBb"])
       rotationSampling.append(args["EROTb"])
     else:
       vibrationSampling.append(args["TVIBb"])
       rotationSampling.append(args["TROTb"])
+
     
     # Note:
     # Right now, all arguments are mandatory (even though this does
@@ -245,16 +254,16 @@ def main():
     try_qcenginegamess = False
     if (input_path.endswith(('.npz',))):
     
-      print("Input file '"+input_path+"' looks like a sGDML file so will attempt to read it in as such...")
+      print("#VENUS INPUT FILE '"+input_path+"' LOOKS LIKE A SGDML FILE SO WILL ATTEMPT TO READ IT IN AS SUCH...")
       try:
         calc = SGDMLCalculator(input_path)
         try_sgdml = True
       except:
-        print("   Could not load file '"+input_path+"' as a sGDML model!")
+        print("#VENUS    COULD NOT LOAD FILE '"+input_path+"' AS A SGDML MODEL!")
         try_psi4 = True
     
     elif (input_path.endswith(('.physnet.config',))):
-      print("Input file '"+input_path+"' looks like a PhysNet config file so will attempt to read it in as such...")
+      print("#VENUS INPUT FILE '"+input_path+"' LOOKS LIKE A PHYSNET CONFIG FILE SO WILL ATTEMPT TO READ IT IN AS SUCH...")
     
       if True:
         tmp_mol = read(Qfile)
@@ -294,25 +303,40 @@ def main():
     if (try_schnet):
     
       # Initialize the ML ase interface
+
+      spk_rcut = 6.0
     
-      # To accomodate for the older versions of numpy used in Schnet==1.0
-      np.int = np.int32
-      np.float = np.float64
-      np.bool = np.bool_
-    
-      calc = spk.interfaces.SpkCalculator(
+      # To accomodate for the older versions of numpy used in Schnetpack version < 2.0
+      if True:
+        np.int = np.int32
+        np.float = np.float64
+        np.bool = np.bool_
+
+      # The appropriate arguments for the current Schnetpack version >= 2.0
+      if True:
+        calc = spk.interfaces.SpkCalculator(
+          input_path,
+          device="cpu",
+          energy_unit="eV",
+          position_unit="Angstrom",
+          neighbor_list=spk.transform.ASENeighborList(spk_rcut),
+        )
+
+      # The appropriate arguments for the original Schnetpack version < 2.0
+      else:
+        calc = spk.interfaces.SpkCalculator(
           input_path,
           device="cpu",
           energy="energy",    # Name of energies
           forces="forces",    # Name of forces
           energy_units="kcal/mol",
           forces_units="kcal/mol/A",
-          neighbor_list=spk.transform.ASENeighborList(5.0),
-      )
+          neighbor_list=spk.transform.ASENeighborList(spk_rcut),
+        )
     
     
     if (try_bagel):
-      print("Reading input file '"+input_path+"' as a BAGEL input file...")
+      print("#VENUS READING INPUT FILE '"+input_path+"' AS A BAGEL INPUT FILE...")
       calc = bagelcalculator(custominputfile=input_path,command='mpirun /mnt/lustre/koa/koastore/rsun_group/camels/BAGEL_1_AV/BAGEL/bin/BAGEL bagel0.json > bagel0.out')
     
     # calc.restarts_max = 2            # Max number of allowable SCF restarts
@@ -325,7 +349,7 @@ def main():
       calc.F_to_eV_Ang = (units.Ha / units.Bohr)
     
     if (try_psi4):
-      print("Reading input file '"+input_path+"' as a psi4 input file...")
+      print("#VENUS READING INPUT FILE '"+input_path+"' AS A PSI4 INPUT FILE...")
       calc = psi4calculator(input_path,n_threads=n_threads)
     
       calc.restarts_max = 2            # Max number of allowable SCF restarts
@@ -338,11 +362,11 @@ def main():
       calc.F_to_eV_Ang = (units.Ha / units.Bohr)
     
     if (try_xtb):
-      print("Reading input file '"+input_path+"' as a xtb input file...")
+      print("#VENUS READING INPUT FILE '"+input_path+"' AS A XTB INPUT FILE...")
       calc = TBLite(input_path)
     
     if (try_qcenginegamess):
-      print("Reading input file '"+input_path+"' as a QCEngine/GAMESS input file...")
+      print("#VENUS READING INPUT FILE '"+input_path+"' AS A QCENGINE/GAMESS INPUT FILE...")
       calc = qcengineGAMESScalculator(input_path,n_threads=n_threads)
     
       # To conform to VENUS, we are going to keep the units
@@ -353,7 +377,7 @@ def main():
       calc.F_to_eV_Ang = (units.Ha / units.Bohr)
     
     if (try_nwchemex):
-      print("Reading input file '"+input_path+"' as a NWChemEx input file...")
+      print("#VENUS READING INPUT FILE '"+input_path+"' AS A NWCHEMEX INPUT FILE...")
       calc = nwchemexcalculator(input_path,output_path=output_path,n_threads=n_threads)
     
       # To conform to VENUS, we are going to keep the units
@@ -364,7 +388,7 @@ def main():
       calc.F_to_eV_Ang = (units.Ha / units.Bohr)
     
     if (try_nwchem):
-      print("Reading input file '"+input_path+"' as a NWChem (not NWChemEx) input file...")
+      print("#VENUS READING INPUT FILE '"+input_path+"' AS A NWCHEM (NOT NWCHEMEX) INPUT FILE...")
       calc = nwchemcalculator(input_path,output_path=output_path,n_threads=n_threads)
     
       # To conform to VENUS, we are going to keep the units
@@ -376,7 +400,7 @@ def main():
     
     if (try_chempotpy):
     
-      print("Reading input file '"+input_path+"' as a chempotpy input file...")
+      print("#VENUS READING INPUT FILE '"+input_path+"' AS A CHEMPOTPY INPUT FILE...")
     
       # Read the input file
       with open(input_path, 'r') as f:
@@ -391,7 +415,7 @@ def main():
     
         calc = chempotpyCalculator(totallines[0])
         strippedline=" ".join(line.split()[2:])
-        print("Single state: {:s} - Chempotpy input: {:s}".format(totalentries[0],strippedline))
+        print("#VENUS SINGLE STATE: {:s} - CHEMPOTPY INPUT: {:s}".format(totalentries[0],strippedline))
     
         # Note, different chempotpy PES have different maximum allowed distances
         # For O3 surfaces, 100 A is okay (= 2 * 50 A)
@@ -402,7 +426,7 @@ def main():
     
     
     if (try_mopac):
-      print("Reading input file '"+input_path+"' as a MOPAC input file...")
+      print("#VENUS READING INPUT FILE '"+input_path+"' AS A MOPAC INPUT FILE...")
       calc = mopaccalculator(input_path,output_path=output_path)
     
       # To conform to VENUS, we are going to keep the units
@@ -429,14 +453,14 @@ def main():
       newMasses = massFile.readlines()
       massFile.close()
       if (len(newMasses) != len(mol)): #.masses)):
-        raise ValueError("Number of masses provided in the isotope mass file does not match the input XYZ")
+        raise ValueError("#VENUS NUMBER OF MASSES PROVIDED IN THE ISOTOPE MASS FILE DOES NOT MATCH THE INPUT XYZ! EXITING ...")
       mol.set_masses([float(i) for i in newMasses])
     
     # If a rewind-restart file is given, read in the coordinates (Q),
     # momenta (P), and energies, for a possible restart
     if not (rrQPfile is None):
     
-      print("REWIND-RESTARTING using this file: " + rrQPfile)
+      print("#VENUS REWIND-RESTARTING USING THIS FILE: " + rrQPfile)
     
       # Look at the last 1500 frames to restart from (but skip the last rrNskip)
       rrQPfilehandle = open(rrQPfile)
@@ -460,12 +484,12 @@ def main():
           Nconsecutivegoodframes += 1
           E_restart = mol.get_potential_energy()
           dE = abs(E_original - E_restart) / (units.kcal/units.mol)
-          print("REWIND-RESTARTING sees that the %d-th to last frame (1-th to last = last frame) has original energy %.3f and restart energy %.3f kcal/mol"
+          print("#VENUS REWIND-RESTARTING SEES THAT THE %d-TH TO LAST FRAME (1-TH TO LAST = LAST FRAME) HAS ORIGINAL ENERGY %.3f AND RESTART ENERGY %.3f KCAL/MOL"
                  % (rrNskip+i+1, E_original / (units.kcal/units.mol), E_restart / (units.kcal/units.mol)))
         except:
           Nconsecutivegoodframes = 0
           dE = rrQPdEmax * 2
-          print("REWIND-RESTARTING sees that the %d-th to last frame (1-th to last = last frame) has original energy %.3f and restart energy NaN kcal/mol"
+          print("#VENUS REWIND-RESTARTING SEES THAT THE %d-TH TO LAST FRAME (1-TH TO LAST = LAST FRAME) HAS ORIGINAL ENERGY %.3f AND RESTART ENERGY NAN KCAL/MOL"
                  % (rrNskip+i+1, E_original / (units.kcal/units.mol)))
     
         # If they agree within the threshold, then go ahead with the restart
@@ -476,11 +500,11 @@ def main():
             if (MDtype == "smoothed"): continue
     
           rrQPflag = False
-          print("REWIND-RESTARTING accepts using the %d-th to last frame! (1-th to last = last frame)" % (rrNskip+i+1,))
+          print("#VENUS REWIND-RESTARTING ACCEPTS USING THE %d-TH TO LAST FRAME! (1-TH TO LAST = LAST FRAME)" % (rrNskip+i+1,))
           break
     
       if (rrQPflag):
-        raise ValueError("REWIND-RESTARTING failed ... no acceptable frames to restart from")
+        raise ValueError("#VENUS REWIND-RESTARTING FAILED ... NO ACCEPTABLE FRAMES TO RESTART FROM")
     
     # If a momenta file is given, read in the momenta
     # Read it in as a geometry, and then set it into the molecule
@@ -512,33 +536,34 @@ def main():
         if ((len(atomsInFirstGroup) > 0) and (len(atomsInSecondGroup) > 0)):
           bimolecular_flag = True
           if ((ce is None) or (b is None) or (dCM is None)):
-            raise ValueError("Lacking an argument for bimolecular sampling (collision energy, impact parameter, of center of mass distance)")
+            raise ValueError("#VENUS LACKING AN ARGUMENT FOR BIMOLECULAR SAMPLING (COLLISION ENERGY, IMPACT PARAMETER, OR CENTER OF MASS DISTANCE)")
         else:
           bimolecular_flag = False
     
-        print("")
-        print("GEOMETRY INPUT")
-        print("  Input geometry file: ", Qfile)
-        print("Atoms in  first group: ", atomsInFirstGroup)
-        print("Atoms in second group: ", atomsInSecondGroup)
-        print("SAMPLING INPUT")
-        print("  Input momenta file: ", Pfile)
+        print("#VENUS ")
+        print("#VENUS GEOMETRY INPUT")
+        print("#VENUS   INPUT GEOMETRY FILE: ", Qfile)
+        print("#VENUS ATOMS IN  FIRST GROUP: ", *atomsInFirstGroup)
+        print("#VENUS ATOMS IN SECOND GROUP: ", *atomsInSecondGroup)
+        print("#VENUS SAMPLING INPUT")
+        print("#VENUS  INPUT MOMENTA FILE: ", Pfile)
         if (Pfile is None):
-          print("          Optimize molecules? ", optimize_flag)
-          print("     Group A sampling method: ", samplingMethod[0])
-          print("     Group A       vibration: ", vibrationSampling[0])
-          print("     Group A        rotation: ", rotationSampling[0])
-          print("     Group B sampling method: ", samplingMethod[1])
-          print("     Group B       vibration: ", vibrationSampling[1])
-          print("     Group B        rotation: ", rotationSampling[1])
-          print("        Impact parameter (A): ", b)
-          print("      Initial separation (A): ", dCM)
-          print("  Collsion energy (kcal/mol): ", ce)
+          print("#VENUS           OPTIMIZE MOLECULES? ", optimize_flag)
+          print("#VENUS      GROUP A SAMPLING METHOD: ", samplingMethod[0])
+          print("#VENUS      GROUP A       VIBRATION: ", vibrationSampling[0])
+          print("#VENUS      GROUP A        ROTATION: ", rotationSampling[0])
+          print("#VENUS      GROUP B SAMPLING METHOD: ", samplingMethod[1])
+          print("#VENUS      GROUP B       VIBRATION: ", vibrationSampling[1])
+          print("#VENUS      GROUP B        ROTATION: ", rotationSampling[1])
+          print("#VENUS         IMPACT PARAMETER (A): ", b)
+          print("#VENUS       INITIAL SEPARATION (A): ", dCM)
+          print("#VENUS   COLLSION ENERGY (KCAL/MOL): ", ce)
         else:
-          print("  Input momenta file: ", Pfile)
+          print("#VENUS   INPUT MOMENTA FILE: ", Pfile)
     
-        print("##############################################################")
-        print("")
+        print("#VENUS")
+        print("#VENUS ##############################################################")
+        print("#VENUS")
     
         # Sample the internal positions and momenta of each of
         # the two molecules
@@ -547,15 +572,23 @@ def main():
                           samplingMethodA=samplingMethod[0],vibrationalSampleA=vibrationSampling[0],rotationalSampleA=rotationSampling[0],
                           samplingMethodB=samplingMethod[1],vibrationalSampleB=vibrationSampling[1],rotationalSampleB=rotationSampling[1])
     
-        print("Sampling internal degrees of freedom...")
+        print("#VENUS SAMPLING INTERNAL DEGREES OF FREEDOM ...")
         sampler.sampleRelativeQP()
+
+        print("#VENUS")
+        print("#VENUS ##############################################################")
+        print("#VENUS")
     
         if (bimolecular_flag):
-            print("Sampling relative degrees of freedom...")
+            print("#VENUS Sampling relative degrees of freedom...")
             sampler.sampleAbsoluteQP(ce,dCM=dCM,b=b)
     
         else:
             sampler.centerMolecule(range(Natoms))
+
+        print("#VENUS")
+        print("#VENUS              DONE!")
+        print("#VENUS")
     
     ########################################################################################
     
@@ -573,7 +606,7 @@ def main():
       MDgen = smoothedMD(mol,trajfile,dt,Nprint=Nprint,Nrewindsteps=Nrewindsteps,dEmax=dEmax,Edriftmax=Edriftmax,E0=E0,n_threads=n_threads)
     
     else:
-      raise ValueError("MD type '"+MDtype+"' is not valid! Exiting...")
+      raise ValueError("#VENUS MD TYPE '"+MDtype+"' IS NOT VALID! EXITING ...")
     
     MDgen.production(Nsteps)
     

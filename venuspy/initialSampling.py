@@ -376,7 +376,7 @@ class initialSampling:
         # If the bond length at the energy minimum is too
         # large, print this warning
         if (bondLength > 6):
-            raise ValueError("In FINLNJ: bondLength > 6 for diatom sampling")
+            raise ValueError("#VENUS IN FINLNJ: BONDLENGTH > 6 FOR DIATOM SAMPLING")
     
         # Position the diatom so that the bond is along
         # the z-axis; place the atoms so that (assuming
@@ -400,8 +400,8 @@ class initialSampling:
         Veff = (V - V0) + Erot0
     
         if (self.debug):
-            print("In FINLNJ: V-V0 = ", (V-V0), "E(not V-V0) = ", Erot0)
-            print("In FINLNJ: Veff = ", Veff, "   E = ", E)
+            print("#VENUS IN FINLNJ: V-V0 = ", (V-V0), "E(NOT V-V0) = ", Erot0)
+            print("#VENUS IN FINLNJ: VEFF = ", Veff, "   E = ", E)
     
         # If the energy is ALREADY above that required
         # for the system, then print this warning
@@ -440,7 +440,7 @@ class initialSampling:
                 break
     
         rMAX = newBondLength
-        if (self.debug): print("In FINLNJ: rMAX(A) = ", rMAX)
+        if (self.debug): print("#VENUS IN FINLNJ: RMAX(A) = ", rMAX)
     
         # Find the lower bound
         q[1][2] = q[0][2] + bondLength
@@ -463,7 +463,7 @@ class initialSampling:
                 break
     
         rMIN = newBondLength
-        if (self.debug): print("In FINLNJ: rMIN(A) = ", rMIN)
+        if (self.debug): print("#VENUS IN FINLNJ: RMIN(A) = ", rMIN)
     
         # Prepare the bond lengths for which to
         # integrate the energy over
@@ -490,9 +490,9 @@ class initialSampling:
             if (E > Veff):
                 Asum += w[j] * np.sqrt(E-Veff)
             else:
-                if (self.debug): print("In FINLNJ: see point with E<Veff (r(A),E(kcal/mol),Veff(kcal/mol)) = ", (newBondLength, E, Veff))
+                if (self.debug): print("#VENUS IN FINLNJ: SEE POINT WITH E<VEFF (R(A),E(KCAL/MOL),VEFF(KCAL/MOL)) = ", (newBondLength, E, Veff))
     
-        if (self.debug): print("In FINLNJ: Integral = ", Asum)
+        if (self.debug): print("#VENUS IN FINLNJ: INTEGRAL = ", Asum)
     
         # Return the molecule to its minimum
         # energy configuration for now
@@ -523,8 +523,8 @@ class initialSampling:
         AM0  = (np.sqrt(2 * self.rotConstant2energy)) * np.sqrt(float(Nrot0*(Nrot0+1)))
 
         if (self.debug):
-            print("AM from EBK:", AM0)
-            print("R0: ", bondLength, "I=mu*R0^2: ", mu*(bondLength**2), "Erot: ", (AM0**2)/(2*mu*(bondLength**2)))
+            print("#VENUS IN EBK:  AM0:", AM0)
+            print("#VENUS IN EBK:  R0: ", bondLength, "I=MU*R0^2: ", mu*(bondLength**2), "EROT: ", (AM0**2)/(2*mu*(bondLength**2)))
     
         # Only accept the range of bond lengths
         # found by the algorithm "FINLNJ" if its
@@ -538,11 +538,11 @@ class initialSampling:
             Nvib_error = Nvib0 - Nvib
             Erovib = Erovib + Nvib_error * hnu
     
-            if (self.debug): print("Nvib0:",Nvib0, "Nvib:",Nvib, "Nvib_error:",Nvib_error)
+            if (self.debug): print("#VENUS IN EBK:   NVIB0:",Nvib0, "NVIB:",Nvib, "ERR(NVIB):",Nvib_error)
     
             Ntries += 1
             if (Ntries > 200):
-                raise ValueError("In getDiatomBondLengthRangeWithEBK: Ntries for diatom sampling above 200")
+                raise ValueError("#VENUS IN EBK: NTRIES FOR DIATOM SAMPLING ABOVE 200")
     
         # Make sure not to include the turning points themselves
         # in the subsequent distance scans
@@ -561,14 +561,16 @@ class initialSampling:
         q = qBOTH[reactantIndexes]
         qCM = self.getCenterOfMass(m,q)
     
-        if (self.debug): print("Nvib:", [Nvib])
+        if (self.debug): print("#VENUS")
+        if (self.debug): print("#VENUS      NOW CHOOSING QP GIVEN NVIB ...", [Nvib])
+        if (self.debug): print("#VENUS")
     
         # Get the energy at this optimized structure;
         # this MUST be a energy minimum for this program
         # to work smoothly
         self.separateMolecules()
         V0 = self.mol.get_potential_energy()
-        if (self.debug): print("V0:",V0)
+        if (self.debug): print("#VENUS V0, THE POTENTIAL ENERGY MINIMUM: {:.4f} EV".format(V0))
     
         # Get the "turning points" or the bounds for
         # the bond length
@@ -576,8 +578,10 @@ class initialSampling:
         rMIN, rMAX, AM, Erovib, pTEST = self.getDiatomBondLengthRangeWithEBK(reactantIndexes,Nrot,Nvib,Evib,V0)
 
         if (self.debug):
-            print("Evib: ", Evib, "Erovib: ", Erovib)
-            print("Rmin: ", rMIN, "Rmax: ", rMAX)
+            print("#VENUS  EVIB: ", Evib, "EV     EROVIB: ", Erovib, "EV")
+            print("#VENUS  RMIN: ", rMIN, "ANG     RMAX: ", rMAX, "ANG")
+            print("#VENUS")
+            print("#VENUS ... ENTERING QP ITERATIVE EBK SAMPLING ...")
 
         ErotR2 = (AM**2) / (2*mu)
     
@@ -604,7 +608,7 @@ class initialSampling:
             # make sure to set Rmin and Rmax correctly to avoid this
             # (so that the MC sampling is correct)
             if (Ediff <= 0.0e0):
-                if (self.debug): print("initQP diatom iteration.... ACCEPTED for (r,Ediff) = ", (r,Ediff))
+                if (self.debug): print("#VENUS ... ACCEPTED FOR (R,EDIFF) = ", (r,Ediff))
                 Ediff = 0.0e0
                 PR = 0.0e0
                 break
@@ -615,10 +619,10 @@ class initialSampling:
     
                 u = random.random()
                 if (Pkinetic < u):
-                    if (self.debug): print("initQP diatom iteration.... REJECTED for (Kvib>0) (r,Ediff,Pkin) = ", (r,Ediff,Pkinetic))
+                    if (self.debug): print("#VENUS ... REJECTED FOR (KVIB>0) (R,EDIFF,PKIN) = ", (r,Ediff,Pkinetic))
                     continue
     
-                if (self.debug): print("initQP diatom iteration.... ACCEPTED for (Kvib>0) (r,Ediff,Pkin) = ", (r,Ediff,Pkinetic))
+                if (self.debug): print("#VENUS ... ACCEPTED FOR (KVIB>0) (R,EDIFF,PKIN) = ", (r,Ediff,Pkinetic))
                 break
     
         # Determine whether to spin clockwise or anticlockwise
@@ -654,9 +658,10 @@ class initialSampling:
         omega[1] = -L[1] / Ixy
         p += self.getMomentaFromAngularVelocity(m,q,omega)
     
-        if (self.debug):
-            print("initQP Evib and potEvib: ", Evib, Vdiff)
-            print("initQP Erot and omega: ", self.getErotAndOmegaFromP(m,q,p))
+        if (self.debug): print("#VENUS DIATOM CHOSEN EVIB ANG POTEVIB: ", Evib, Vdiff)
+        if (self.debug): print("#VENUS DIATOM EROT AND OMEGA: ", self.getErotAndOmegaFromP(m,q,p))
+        if (self.debug): print("#VENUS     DONE SELECTING QP!")
+        if (self.debug): print("#VENUS")
     
         # Set these positions and momenta
         qBOTH[reactantIndexes] = q
@@ -747,7 +752,10 @@ class initialSampling:
             # Calculate the Erot contribution from this
             Erot = 0.5e0*(Erot + ((L[0]**2)/axesMasses[0]) + ((L[1]**2)/axesMasses[1]))
     
-        if (self.debug): print("AM from thermal:", np.sqrt(sum(L**2)))
+        if (self.debug): print("#VENUS")
+        if (self.debug): print("#VENUS L CHOSEN FROM THERMAL DISTRIBUTION:", np.sqrt(sum(L**2)))
+        if (self.debug): print("#VENUS     DONE SELECTING L!")
+        if (self.debug): print("#VENUS")
     
         return Erot, L
     
@@ -778,6 +786,7 @@ class initialSampling:
     
         return np.array(Evibs), np.array(amplitudes)
     
+
     # After choosing an angular momentum, the frequencies,
     # normal modes, and vibrational quanta, choose a set
     # of initial coordinates
@@ -791,7 +800,11 @@ class initialSampling:
         masses = massesBOTH[reactantIndexes]
         qCM = self.getCenterOfMass(masses,q0)
     
-        if (self.debug): print("reactant indexes:", reactantIndexes)
+        if (self.debug): print("#VENUS")
+        if (self.debug): print("#VENUS      NOW CHOOSING QP GIVEN {N_i}, L ...")
+        if (self.debug): print("#VENUS")
+        if (self.debug): print("#VENUS REACTANT INDEXES:", *reactantIndexes)
+        if (self.debug): print("#VENUS")
     
         # Get the energy at this optimized structure;
         # this MUST be a energy minimum for this program
@@ -799,7 +812,7 @@ class initialSampling:
         self.separateMolecules()
         E0 = self.mol.get_potential_energy()
         self.centerMolecule(reactantIndexes)
-        if (self.debug): print("E0:",E0)
+        if (self.debug): print("#VENUS E0, THE POTENTIAL ENERGY MINIMUM: {:.4f} EV".format(E0))
     
         # Now, get the corresponding vibrational and
         # rotational energies
@@ -808,7 +821,11 @@ class initialSampling:
         Erot0, omega0 = self.getErotAndOmegaFromL(masses,q0-qCM,L0)
     
         Eint0 = Evib0 + Erot0
-        if (self.debug): print("Evib0,Erot0,Eint0:",Evib0,Erot0,Eint0)
+        if (self.debug): print("#VENUS EVIB0, THE INITIAL REQUESTED VIBRATIONAL ENERGY: {:.4f} EV".format(Evib0))
+        if (self.debug): print("#VENUS EROT0, THE INITIAL REQUESTED  ROTATIONAL ENERGY: {:.4f} EV".format(Erot0))
+        if (self.debug): print("#VENUS EINT0, THE INITIAL REQUESTED    INTERNAL ENERGY: {:.4f} EV".format(Eint0))
+
+        if (self.debug): print("#VENUS ... ENTERING QP ITERATIVE MC SAMPLING ...")
     
         Nmodes = len(freqs)
         Natoms = len(reactantIndexes)
@@ -834,13 +851,15 @@ class initialSampling:
             # Modify the original optimized structure
             # with the perturbations
             q = np.copy(q0)
+            qq = np.zeros(np.shape(q))
             p = np.zeros(np.shape(q))
             for i in range(Nmodes):
-                q += nmodes[i] * dq[i]
-                p += nmodes[i] * dp[i]
+                p  += nmodes[i] * dp[i]
+                qq += nmodes[i] * dq[i]
     
             for i in range(Natoms):
-                p[i] = p[i] * masses[i]
+                p[i] = p[i] * np.sqrt(masses[i])              # The (M^1/2) factor "cancels out" the mass-weighting of the normal modes (M^-1/2)(NMODE)
+                q[i] = q0[i] + qq[i] / np.sqrt(masses[i])     # Now, Q = (M^-1) P = (M^-1/2) (M^-1/2)(NMODE)
     
             qCM = self.getCenterOfMass(masses,q)
     
@@ -848,7 +867,7 @@ class initialSampling:
             # angular momentum
             L = self.getAngularMomentum(q-qCM,p)
     
-            # Comput the "difference" in angular
+            # Compute the "difference" in angular
             # momentum and velocity
             Ldiff = L - L0
             Erot, omega = self.getErotAndOmegaFromL(masses,q-qCM,Ldiff)
@@ -884,9 +903,9 @@ class initialSampling:
             L = self.getAngularMomentum(q-qCM,p)
             Erot, omega = self.getErotAndOmegaFromL(masses,q-qCM,L)
 
-            if (self.debug):
-                print("KErot: ", Erot, " KEvib: ", KE-Erot)
-                print(NpureKinetic,fitnessOfEint,Eint0,Eint)
+            if (self.debug): print("#VENUS      QP SAMPLE")
+            if (self.debug): print("#VENUS KEROT: {:.4f} EV    KEVIB {:.4f} EV".format(Erot, KE - Erot))
+            if (self.debug): print("#VENUS NKINETIC {:d} ERR(EINT) {:.4f}     EINT(REQUESTED) {:.4f} EV ENT(SAMPLED) {:.4f}".format(NpureKinetic,fitnessOfEint,Eint0,Eint))
     
             # First, if all of the internal energy is rotational,
             # then do not attempt any scaling and just exit
@@ -934,10 +953,10 @@ class initialSampling:
                 L = self.getAngularMomentum(q-qCM,p)
                 Erot, omega = self.getErotAndOmegaFromL(masses,q-qCM,L)
 
-                if (self.debug):
-                    print("Erot:",Erot)
-                    print(fitnessOfEint,Eint0,Eint)
-                    print(q)
+                if (self.debug): print("#VENUS TRYING TO RESCALE ...")
+                if (self.debug): print("#VENUS KEROT: {:.4f} EV".format(Erot))
+                if (self.debug): print("#VENUS           ERR(EINT) {:.4f}     EINT(REQUESTED) {:.4f} EV ENT(SAMPLED) {:.4f}".format(fitnessOfEint,Eint0,Eint))
+#               if (self.debug): print(q)
     
                 if (fitnessOfEint >= 0.1e0 and NpureKinetic < Nmodes):
                     NpureKinetic += 1
@@ -946,10 +965,200 @@ class initialSampling:
                 Nscale += 1
     
             if (fitnessOfEint < 0.001e0): break
+
+        if (self.debug): print("#VENUS  DONE SELECTING QP!")
+        if (self.debug): print("#VENUS")
     
         pBOTH[reactantIndexes] = p
         self.mol.set_momenta(pBOTH)
+
+
+    # After choosing a rotational energy, the frequencies,
+    # normal modes, and vibrational quanta, choose a set
+    # of initial coordinates
+    def chooseQPgivenNandEROTandNormalModes(self,reactantIndexes,vibNums,Erot0,freqs,nmodes):
     
+        massesBOTH = self.mol.get_masses()
+        qBOTH = self.mol.get_positions()
+        pBOTH = self.mol.get_momenta()
+    
+        q0 = qBOTH[reactantIndexes]
+        masses = massesBOTH[reactantIndexes]
+        qCM = self.getCenterOfMass(masses,q0)
+    
+        if (self.debug): print("#VENUS")
+        if (self.debug): print("#VENUS      NOW CHOOSING QP GIVEN {N_i}, EROT ...")
+        if (self.debug): print("#VENUS")
+        if (self.debug): print("#VENUS REACTANT INDEXES:", *reactantIndexes)
+        if (self.debug): print("#VENUS")
+    
+        # Get the energy at this optimized structure;
+        # this MUST be a energy minimum for this program
+        # to work smoothly
+        self.separateMolecules()
+        E0 = self.mol.get_potential_energy()
+        self.centerMolecule(reactantIndexes)
+        if (self.debug): print("#VENUS E0, THE POTENTIAL ENERGY MINIMUM: {:.4f} EV".format(E0))
+    
+        # Now, get the corresponding vibrational and
+        # rotational energies
+        Evibs, amplitudes = self.getVibrationalEnergiesAndAmplitudes(freqs,vibNums)
+        Evib0 = sum(Evibs)
+    
+        Eint0 = Evib0 + Erot0
+        if (self.debug): print("#VENUS EVIB0, THE INITIAL REQUESTED VIBRATIONAL ENERGY: {:.4f} EV".format(Evib0))
+        if (self.debug): print("#VENUS EROT0, THE INITIAL REQUESTED  ROTATIONAL ENERGY: {:.4f} EV".format(Erot0))
+        if (self.debug): print("#VENUS EINT0, THE INITIAL REQUESTED    INTERNAL ENERGY: {:.4f} EV".format(Eint0))
+
+        if (self.debug): print("#VENUS ... ENTERING QP ITERATIVE MC SAMPLING ...")
+    
+        Nmodes = len(freqs)
+        Natoms = len(reactantIndexes)
+        NpureKinetic=0
+    
+        dq = np.zeros((Nmodes))
+        dp = np.zeros((Nmodes))
+        while True:
+    
+            # Fill up some normal modes with purely
+            # kinetic energy
+            for i in range(NpureKinetic):
+                dq[i] = 0.0e0
+                dp[i] = -freqs[i]*amplitudes[i]
+    
+            # Fill up the other normal modes with a mix
+            # of kinetic and potential energy
+            for i in range(NpureKinetic,Nmodes):
+                u = 2 * np.pi * random.random()
+                dq[i] = amplitudes[i]*np.cos(u) / (8065.5401*1.8836518e-3)
+                dp[i] = -freqs[i]*amplitudes[i]*np.sin(u)
+    
+            # Modify the original optimized structure
+            # with the perturbations
+            q = np.copy(q0)
+            qq = np.zeros(np.shape(q))
+            p = np.zeros(np.shape(q))
+            for i in range(Nmodes):
+                p  += nmodes[i] * dp[i]
+                qq += nmodes[i] * dq[i]
+    
+            for i in range(Natoms):
+                p[i] = p[i] * np.sqrt(masses[i])              # The (M^1/2) factor "cancels out" the mass-weighting of the normal modes (M^-1/2)(NMODE)
+                q[i] = q0[i] + qq[i] / np.sqrt(masses[i])     # Now, Q = (M^-1) P = (M^-1/2) (M^-1/2)(NMODE)
+    
+            qCM = self.getCenterOfMass(masses,q)
+    
+            # Calculate the new (probably different)
+            # angular momentum
+            L = self.getAngularMomentum(q-qCM,p)
+    
+            # Compute the "difference" in angular
+            # momentum and velocity
+            Erot, omega = self.getErotAndOmegaFromL(masses,q-qCM,L)
+            Ldiff = L - np.sqrt(Erot0 / Erot) * L
+            Erot, omega = self.getErotAndOmegaFromL(masses,q-qCM,Ldiff)
+    
+            # Use this angular momentum difference to
+            # adjust linear momenta for an accurate 
+            # angular momentum and rotational energy
+            pdiff = self.getMomentaFromAngularVelocity(masses,q-qCM,omega)
+            p -= pdiff
+    
+            # Compute the new total potential and kinetic
+            # energies of the system
+    
+            qBOTH[reactantIndexes] = q
+            self.mol.set_positions(qBOTH)
+            KE = self.getKineticEnergy(masses,p)
+    
+            self.separateMolecules()
+            E = self.mol.get_potential_energy() + KE
+            self.centerMolecule(reactantIndexes)
+    
+            # The internal energy of the molecule of interest
+            # will be the difference between the total energy
+            # and the reference energy from earlier (when it
+            # is at the local minimum)
+            Eint = E - E0
+    
+            # See how close this internal energy is to the
+            # required amount
+            fitnessOfEint = abs(Eint0-Eint)/Eint0
+    
+            qCM = self.getCenterOfMass(masses,q)
+            L = self.getAngularMomentum(q-qCM,p)
+            Erot, omega = self.getErotAndOmegaFromL(masses,q-qCM,L)
+
+            if (self.debug): print("#VENUS      QP SAMPLE")
+            if (self.debug): print("#VENUS KEROT: {:.4f} EV    KEVIB {:.4f} EV".format(Erot, KE - Erot))
+            if (self.debug): print("#VENUS NKINETIC {:d} ERR(EINT) {:.4f}     EINT(REQUESTED) {:.4f} EV ENT(SAMPLED) {:.4f}".format(NpureKinetic,fitnessOfEint,Eint0,Eint))
+    
+            # First, if all of the internal energy is rotational,
+            # then do not attempt any scaling and just exit
+            if (Evib0 < 1.0e-4*Eint0): break
+    
+            # If the internal energy is not that close, then just
+            # convert one of the normal modes to being purely
+            # kinetic
+            if (fitnessOfEint >= 0.1e0 and NpureKinetic < Nmodes):
+                NpureKinetic += 1
+                continue
+    
+            # If the internal energy is close to that required,
+            # try scaling it
+            Nscale = 0
+            #while (Nscale < 1000 and fitnessOfEint >= 0.001e0):
+            while (Nscale < 50 and fitnessOfEint >= 0.001e0):
+                scalingFactor = np.sqrt(Eint0/Eint)
+                p = p * scalingFactor
+                q = q0 + (q - q0) * scalingFactor
+    
+                qCM = self.getCenterOfMass(masses,q)
+    
+                L = self.getAngularMomentum(q-qCM,p)
+    
+                Erot, omega = self.getErotAndOmegaFromL(masses,q-qCM,L)
+                Ldiff = L - np.sqrt(Erot0 / Erot) * L
+                Erot, omega = self.getErotAndOmegaFromL(masses,q-qCM,Ldiff)
+    
+                pdiff = self.getMomentaFromAngularVelocity(masses,q-qCM,omega)
+                p -= pdiff
+    
+                qBOTH[reactantIndexes] = q
+                self.mol.set_positions(qBOTH)
+                KE = self.getKineticEnergy(masses,p)
+    
+                self.separateMolecules()
+                E = self.mol.get_potential_energy() + KE
+                self.centerMolecule(reactantIndexes)
+    
+                Eint = E - E0
+           
+                fitnessOfEint = abs(Eint0-Eint)/Eint0
+    
+                qCM = self.getCenterOfMass(masses,q)
+                L = self.getAngularMomentum(q-qCM,p)
+                Erot, omega = self.getErotAndOmegaFromL(masses,q-qCM,L)
+
+                if (self.debug): print("#VENUS TRYING TO RESCALE ...")
+                if (self.debug): print("#VENUS KEROT: {:.4f} EV".format(Erot))
+                if (self.debug): print("#VENUS           ERR(EINT) {:.4f}     EINT(REQUESTED) {:.4f} EV ENT(SAMPLED) {:.4f}".format(fitnessOfEint,Eint0,Eint))
+#               if (self.debug): print(q)
+    
+                if (fitnessOfEint >= 0.1e0 and NpureKinetic < Nmodes):
+                    NpureKinetic += 1
+                    break
+    
+                Nscale += 1
+    
+            if (fitnessOfEint < 0.001e0): break
+
+        if (self.debug): print("#VENUS  DONE SELECTING QP!")
+        if (self.debug): print("#VENUS")
+    
+        pBOTH[reactantIndexes] = p
+        self.mol.set_momenta(pBOTH)
+
     
     # Make a function that will set up the two molecules' internal positions
     # and momenta including their rotational and vibrational energies
@@ -988,13 +1197,16 @@ class initialSampling:
     
             Nreactant += 1
             if (self.debug):
-                print("##############################################################")
-                print("Initializing reactant group ", Nreactant)
-                print("   with atomic indexes:", reactantIndexes)
+                print("#VENUS")
+                print("#VENUS #############################################################")
+                print("#VENUS")
+                print("#VENUS INITIALIZING REACTANT GROUP:", Nreactant)
+                print("#VENUS            REACTANT INDEXES:", *reactantIndexes)
 
             if (len(reactantIndexes) == 0):
-                print("No atoms in reactant group ", Nreactant)
-                print("Must be unimolecular! Skipping sampling for this group...")
+                print("#VENUS")
+                print("#VENUS NO ATOMS IN REACTANT GROUP:", Nreactant)
+                print("#VENUS MUST BE UNIMOLECULAR! SKIPPING SAMPLING FOR THIS GROUP ...")
                 continue
     
             # You must center the molecule first before calculating
@@ -1011,10 +1223,13 @@ class initialSampling:
             axesVectors[:,0], axesVectors[:,1], axesVectors[:,2] = Ix, Iy, Iz        # Switch axes so that they are in INCREASING order instead
     
             if (self.debug):
-                print("I:", I)
-                print("axesMasses ... axesVectors")
+                print("#VENUS")
+                print("#VENUS I, MOMENT OF INERTIA TENSOR:")
                 for i in range(3):
-                    print(axesMasses[i]," ... ",axesVectors[i])
+                    print("#VENUS ", I[i])
+                print("#VENUS MOMENTS OF INERTIA AND PRINCIPAL AXES:")
+                for i in range(3):
+                    print("#VENUS ", axesMasses[i]," ... ",axesVectors[i])
     
             # Determine whether the molecules is linear by looking at the smallest principal axis
 #           if (axesMasses[0] < axesMasses[1]*1.0e-12):
@@ -1025,7 +1240,7 @@ class initialSampling:
             else:
                 linear = False
     
-            if (self.debug): print("Reactant is linear?", linear)
+            if (self.debug): print("#VENUS REACTANT IS LINEAR? ", linear)
     
             # For accurate energy (and force) calculations, the
             # two molecules must be first separated
@@ -1047,13 +1262,13 @@ class initialSampling:
                 nonzeroModes = modes[6:]
 
             if (any(nonzeroEs < 0)):
-                print("WARNING: one of the 'nonzero' modes has a negative frequency...")
-                print("         for initial sampling, will convert to a positive number")
+                print("#VENUS WARNING: ONE OF THE 'NONZERO' MODES HAS A NEGATIVE FREQUENCY ...")
+                print("#VENUS          FOR INITIAL SAMPLING, WILL CONVERT TO A POSITIVE NUMBER")
                 nonzeroEs = np.abs(nonzeroEs)
 
             if (any(nonzeroEs <= 0.001*self.freq2energy)):
-                print("WARNING: one of the 'nonzero' modes has a close to zero  frequency...")
-                print("         for initial sampling, will convert to a small nonzero number (0.001 cm-1)")
+                print("#VENUS WARNING: ONE OF THE 'NONZERO' MODES HAS A CLOSE TO ZERO FREQUENCY ...")
+                print("#VENUS          FOR INITIAL SAMPLING, WILL CONVERT TO A SMALL NONZERO NUMBER (0.001 CM-1)")
                 nonzeroEs[nonzeroEs <= 0.001*self.freq2energy] = 0.001 * self.freq2energy
     
             ###############################################################################################
@@ -1063,9 +1278,11 @@ class initialSampling:
             q = self.mol.get_positions()[reactantIndexes]
 
             if (self.debug):
-                print("Reactant, before selection:")
+                print("#VENUS")
+                print("#VENUS REACTANT, BEFORE SELECTION:")
                 for qi in q:
-                    print(qi)
+                    print("#VENUS     ", qi)
+                print("#VENUS")
     
             # Monoatomics need no sampling
             if (Natoms == 1):
@@ -1080,11 +1297,15 @@ class initialSampling:
                 # Change these later to be changed via input file
                 Nrot = rotationSampling[Nreactant-1]
                 Nvib = vibrationSampling[Nreactant-1]
+
+                if (Nrot < 0): raise ValueError("#VENUS NEGATIVE QUANTA SUPPLIED IN 'NROT'")
+                if (Nvib < 0): raise ValueError("#VENUS NEGATIVE QUANTA SUPPLIED IN 'NVIB'")
     
                 if (self.debug):
-                    print("Semiclassical QM sampling")
-                    print("Nrot: ", Nrot)
-                    print("Nvib: ", Nvib)
+                    print("#VENUS")
+                    print("#VENUS  SEMICLASSICAL QM SAMPLING")
+                    print("#VENUS     J:", Nrot)
+                    print("#VENUS     N:", Nvib)
     
                 freq = nonzeroEs[0]
                 self.chooseQPforDiatom(reactantIndexes,Nrot,Nvib,freq)
@@ -1097,11 +1318,15 @@ class initialSampling:
                 # Change these later to be changed via input file
                 Trot = rotationSampling[Nreactant-1]
                 Tvib = vibrationSampling[Nreactant-1]
+
+                if (Trot < 0): raise ValueError("#VENUS NEGATIVE TEMPERATURE SUPPLIED IN 'TROT'")
+                if (Tvib < 0): raise ValueError("#VENUS NEGATIVE TEMPERATURE SUPPLIED IN 'TVIB'")
     
                 if (self.debug):
-                    print("Thermal sampling")
-                    print("Trot: ", Trot)
-                    print("Tvib: ", Tvib)
+                    print("#VENUS")
+                    print("#VENUS  THERMAL SAMPLING")
+                    print("#VENUS     TROT:", Trot, "K")
+                    print("#VENUS     TVIB:", Tvib, "K")
     
                 # You must center the molecule first before calculating
                 # any angular-velocity-related property
@@ -1116,15 +1341,15 @@ class initialSampling:
                 vibNums = self.chooseVibrationalQuantaFromThermalDistribution(nonzeroEs,Tvib)
     
                 if (self.debug):
-                    print("kBTrot:",self.kB*Trot)
-                    print("kBTvib:",self.kB*Tvib)
-                    print("nonzeroFreqs:",nonzeroEs)
-                    print("nonzeroModes:",nonzeroModes)
-                    print("Erot:",Erot)
-                    print("Evib:",sum([float((x+0.5)*y) for x,y in zip (vibNums,nonzeroEs)]))
-                    print("L:", L)
-                    print("Nvibs:",[float(x) for x in vibNums])
-                    print("Evibs:",[float((x+0.5)*y) for x,y in zip (vibNums,nonzeroEs)])
+                    print("#VENUS kB*TROT:",self.kB*Trot)
+                    print("#VENUS kB*TVIB:",self.kB*Tvib)
+                    print("#VENUS NONZEROFREQS:",*nonzeroEs)
+#                   print("#VENUS NONZEROMODES:",nonzeroModes)
+                    print("#VENUS EROT:",Erot)
+                    print("#VENUS EVIB:",sum(Evibs))
+                    print("#VENUS L:", L)
+                    print("#VENUS NVIBS:",*[float(x) for x in vibNums])
+                    print("#VENUS EVIBS:",*[float((x+0.5)*y) for x,y in zip (vibNums,nonzeroEs)])
     
                 self.chooseQPgivenNandLandNormalModes(reactantIndexes,vibNums,L,nonzeroEs,nonzeroModes)
     
@@ -1133,8 +1358,8 @@ class initialSampling:
                 ErotTEST, omegaTEST = self.getErotAndOmegaFromP(masses[reactantIndexes],q,p)
 
                 if (self.debug):
-                    print("Erot:",ErotTEST)
-                    print("omega:", omegaTEST)
+                    print("#VENUS EROT:",ErotTEST)
+                    print("#VENUS OMEGA:", omegaTEST)
 
             # Enter in the desired Erot and Evib, and this will produce QP
             elif (samplingMethod[Nreactant-1] == "microcanonical"):
@@ -1143,10 +1368,14 @@ class initialSampling:
                 Erot = rotationSampling[Nreactant-1] * (units.kcal/units.mol)
                 Evib = vibrationSampling[Nreactant-1] * (units.kcal/units.mol)
 
+                if (Erot < 0): raise ValueError("#VENUS NEGATIVE ENERGY SUPPLIED IN 'EROT'")
+                if (Evib < 0): raise ValueError("#VENUS NEGATIVE ENERGY SUPPLIED IN 'EVIB'")
+
                 if (self.debug):
-                    print("Microcanonical sampling")
-                    print("Erot: ", Erot)
-                    print("Evib: ", Evib)
+                    print("#VENUS")
+                    print("#VENUS  MICROCANONICAL SAMPLING")
+                    print("#VENUS     EROT:", Erot, "EV")
+                    print("#VENUS     EVIB:", Evib, "EV")
     
                 # You must center the molecule first before calculating
                 # any angular-velocity-related property
@@ -1176,23 +1405,83 @@ class initialSampling:
                   vibNums.append((Evibs[i]/nonzeroEs[i]) - 0.50e0)
 
                 if (self.debug):
-                    print("nonzeroFreqs:",nonzeroEs)
-                    print("nonzeroModes:",nonzeroModes)
-                    print("Erot:",Erot)
-                    print("Evib:",sum(Evibs))
-                    print("L:", L)
-                    print("Nvibs:",[float(x) for x in vibNums])
-                    print("Evibs:",[float((x+0.5)*y) for x,y in zip (vibNums,nonzeroEs)])
+                    print("#VENUS NONZEROFREQS:",*nonzeroEs)
+#                   print("#VENUS NONZEROMODES:",nonzeroModes)
+                    print("#VENUS EROT:",Erot)
+                    print("#VENUS EVIB:",sum(Evibs))
+                    print("#VENUS L:", L)
+                    print("#VENUS NVIBS:",*[float(x) for x in vibNums])
+                    print("#VENUS EVIBS:",*[float((x+0.5)*y) for x,y in zip (vibNums,nonzeroEs)])
     
-                self.chooseQPgivenNandLandNormalModes(reactantIndexes,vibNums,L,nonzeroEs,nonzeroModes)
+                self.chooseQPgivenNandEROTandNormalModes(reactantIndexes,vibNums,Erot,nonzeroEs,nonzeroModes)
     
                 q = self.mol.get_positions()[reactantIndexes]
                 p = self.mol.get_momenta()[reactantIndexes]
                 ErotTEST, omegaTEST = self.getErotAndOmegaFromP(masses[reactantIndexes],q,p)
 
                 if (self.debug):
-                    print("Erot:",ErotTEST)
-                    print("omega:", omegaTEST)
+                    print("#VENUS EROT:",ErotTEST)
+                    print("#VENUS OMEGA:", omegaTEST)
+
+            # NEW!
+            # Enter in the desired Erot and Evib, and this will produce QP
+            elif (samplingMethod[Nreactant-1] == "microcanonicalnormalmode"):
+
+                # Change these later to be changed via input file
+                Erot = rotationSampling[Nreactant-1] * (units.kcal/units.mol)
+                normalmodeEvibs = [Evib * (units.kcal/units.mol) for Evib in vibrationSampling[Nreactant-1]]
+                Evib = np.sum(normalmodeEvibs)
+
+                if (Erot < 0): raise ValueError("#VENUS NEGATIVE ENERGY SUPPLIED IN 'EROT'")
+                if (any(np.array(normalmodeEvibs) < 0)): raise ValueError("#VENUS NEGATIVE ENERGY SUPPLIED IN 'EVIBNMODES'")
+
+                if (self.debug):
+                    print("#VENUS")
+                    print("#VENUS  NORMAL MODE (MICROCANONICAL) SAMPLING")
+                    print("#VENUS     EROT:", Erot, "EV")
+                    print("#VENUS     EVIB:", Evib, "EV")
+
+                # You must center the molecule first before calculating
+                # any angular-velocity-related property
+                self.centerMolecule(reactantIndexes)
+
+                # Choose the angular momentum vector assuming the molecule
+                # is oriented in the principal axes coordinates
+                self.rotateMolecule(reactantIndexes,axesVectors)
+                modes = self.rotateNormalModes(modes,axesVectors)
+                nonzeroModes = self.rotateNormalModes(nonzeroModes,axesVectors)
+                Erot0, L = self.chooseAngularMomentumFromSymmetricTopThermalDistribution(linear,axesMasses,300.0)
+                L = L * np.sqrt(Erot/Erot0)
+
+                Nnonzeromodes = len(nonzeroEs)
+                ZPEs, amplitudes = self.getVibrationalEnergiesAndAmplitudes(nonzeroEs,[0 for nonzeroE in nonzeroEs])
+
+                Evibs = normalmodeEvibs
+                if (not (len(Evibs) == Nnonzeromodes)):
+                  raise ValueError("#VENUS INCORRECT NUMBER OF NORMAL MODES GIVEN IN 'EVIBNMODES'")
+
+                vibNums = []
+                for i in range(Nnonzeromodes):
+                  vibNums.append((Evibs[i]/nonzeroEs[i]) - 0.50e0)
+
+                if (self.debug):
+                    print("#VENUS NONZEROFREQS:",*nonzeroEs)
+#                   print("#VENUS NONZEROMODES:",nonzeroModes)
+                    print("#VENUS EROT:",Erot)
+                    print("#VENUS EVIB:",sum(Evibs))
+                    print("#VENUS L:", L)
+                    print("#VENUS NVIBS:",*[float(x) for x in vibNums])
+                    print("#VENUS EVIBS:",*[float((x+0.5)*y) for x,y in zip (vibNums,nonzeroEs)])
+
+                self.chooseQPgivenNandEROTandNormalModes(reactantIndexes,vibNums,Erot,nonzeroEs,nonzeroModes)
+
+                q = self.mol.get_positions()[reactantIndexes]
+                p = self.mol.get_momenta()[reactantIndexes]
+                ErotTEST, omegaTEST = self.getErotAndOmegaFromP(masses[reactantIndexes],q,p)
+
+                if (self.debug):
+                    print("#VENUS EROT:",ErotTEST)
+                    print("#VENUS OMEGA:", omegaTEST)
 
             # NEW!
             # Enter in the desired Erot and Evib, and this will produce QP
@@ -1202,10 +1491,14 @@ class initialSampling:
                 Erot = rotationSampling[Nreactant-1] * (units.kcal/units.mol)
                 Evib = vibrationSampling[Nreactant-1] * (units.kcal/units.mol)
 
+                if (Erot < 0): raise ValueError("#VENUS NEGATIVE ENERGY SUPPLIED IN 'EROT'")
+                if (Evib < 0): raise ValueError("#VENUS NEGATIVE ENERGY SUPPLIED IN 'EVIB'")
+
                 if (self.debug):
-                    print("Microcanonical sampling with Wigner rejection")
-                    print("Erot: ", Erot)
-                    print("Evib: ", Evib)
+                    print("#VENUS")
+                    print("#VENUS  MICROCANONICAL SAMPLING ... WITH WIGNER REJECTION")
+                    print("#VENUS     EROT:", Erot, "EV")
+                    print("#VENUS     EVIB:", Evib, "EV")
     
                 # You must center the molecule first before calculating
                 # any angular-velocity-related property
@@ -1246,23 +1539,23 @@ class initialSampling:
                   if (Pwigner >= Prand): break   # Von Neumann rejection
 
                 if (self.debug):
-                    print("nonzeroFreqs:",nonzeroEs)
-                    print("nonzeroModes:",nonzeroModes)
-                    print("Erot:",Erot)
-                    print("Evib:",sum(Evibs))
-                    print("L:", L)
-                    print("Nvibs:",[float(x) for x in vibNums])
-                    print("Evibs:",[float((x+0.5)*y) for x,y in zip (vibNums,nonzeroEs)])
+                    print("#VENUS NONZEROFREQS:",*nonzeroEs)
+#                   print("#VENUS NONZEROMODES:",nonzeroModes)
+                    print("#VENUS EROT:",Erot)
+                    print("#VENUS EVIB:",sum(Evibs))
+                    print("#VENUS L:", L)
+                    print("#VENUS NVIBS:",*[float(x) for x in vibNums])
+                    print("#VENUS EVIBS:",*[float((x+0.5)*y) for x,y in zip (vibNums,nonzeroEs)])
     
-                self.chooseQPgivenNandLandNormalModes(reactantIndexes,vibNums,L,nonzeroEs,nonzeroModes)
+                self.chooseQPgivenNandEROTandNormalModes(reactantIndexes,vibNums,Erot,nonzeroEs,nonzeroModes)
     
                 q = self.mol.get_positions()[reactantIndexes]
                 p = self.mol.get_momenta()[reactantIndexes]
                 ErotTEST, omegaTEST = self.getErotAndOmegaFromP(masses[reactantIndexes],q,p)
 
                 if (self.debug):
-                    print("Erot:",ErotTEST)
-                    print("omega:", omegaTEST)
+                    print("#VENUS EROT:",ErotTEST)
+                    print("#VENUS OMEGA:", omegaTEST)
 
             # NEW!
             # Enter in the desired Erot and Evib, and this will produce QP
@@ -1272,10 +1565,14 @@ class initialSampling:
                 Erot = rotationSampling[Nreactant-1] * (units.kcal/units.mol)
                 Evib = vibrationSampling[Nreactant-1] * (units.kcal/units.mol)
 
+                if (Erot < 0): raise ValueError("#VENUS NEGATIVE ENERGY SUPPLIED IN 'EROT'")
+                if (Evib < 0): raise ValueError("#VENUS NEGATIVE ENERGY SUPPLIED IN 'EVIB'")
+
                 if (self.debug):
-                    print("Microcanonical sampling with Wigner rejection")
-                    print("Erot: ", Erot)
-                    print("Evib: ", Evib)
+                    print("#VENUS")
+                    print("#VENUS  MICROCANONICAL QUANTUM SAMPLING")
+                    print("#VENUS     EROT:", Erot, "EV")
+                    print("#VENUS     EVIB:", Evib, "EV")
     
                 # You must center the molecule first before calculating
                 # any angular-velocity-related property
@@ -1305,7 +1602,7 @@ class initialSampling:
                     DOSs.append(states)
 
                 if (DOSs[0][round((Evib - 0.5e0*sum(nonzeroEs)) // dEgrain)] == 0):
-                  raise ValueError("Quantum microcanonical ensemble does not a vibrational state with exactly {:.3f} kcal/mol energy".format(Evib/(units.kcal/units.mol)))
+                  raise ValueError("#VENUS QUANTUM MICROCANONICAL ENSEMBLE DOES NOT HAVE A VIBRATIONAL STATE WITH EXACTLY {.3f} KCAL/MOL ENERGY".format(Evib/(units.kcal/units.mol)))
 
                 while True:
 
@@ -1317,7 +1614,7 @@ class initialSampling:
                       Evib_chosen = round(random.random() * Evib0 / nonzeroEs[next_index]) * nonzeroEs[next_index]
                       Pquantum = dos[int((Evib0-Evib_chosen) // dEgrain)] / dos[int((Evib0) // dEgrain)]
                       Prand = random.random()
-                      if (self.debug): print("MicrocanonicalQuantum rejection: ", Pquantum, ">=", Prand, "? for mode", next_index, "Evib_left:", Evib0-Evib_chosen)
+                      if (self.debug): print("#VENUS QUANTUM MICROCANONICAL REJECTION: ", Pquantum, ">=", Prand, "? FOR MODE", next_index, "EVIB_LEFT:", Evib0-Evib_chosen)
                       if (Pquantum > Prand): break
                     Evibs.insert(0,Evib_chosen)
                     Evib0 -= Evibs[0]
@@ -1332,7 +1629,7 @@ class initialSampling:
                         candidateEvib12s.append([Evib1,Evib2])
                         
                   if (len(candidateEvib12s) == 0):
-                    if (self.debug): print("Warning: inconsistency in microcanonical-quantum sampling ... will try to resample...")
+                    if (self.debug): print("#VENUS WARNING: INCONSISTENCY IN QUANTUM MICROCANONICAL SAMPLING ... WILL TRY TO RESAMPLE ...")
                     continue
                   tmpEvibs = random.choice(candidateEvib12s) + Evibs
                   Evibs = [float(x + 0.5e0*y) for x,y in zip(tmpEvibs,nonzeroEs)]
@@ -1346,34 +1643,37 @@ class initialSampling:
 
 
                 if (self.debug):
-                    print("nonzeroFreqs:",nonzeroEs)
-                    print("nonzeroModes:",nonzeroModes)
-                    print("Erot:",Erot)
-                    print("Evib:",sum(Evibs))
-                    print("L:", L)
-                    print("Nvibs:",[float(x) for x in vibNums])
-                    print("Evibs:",[float((x+0.5)*y) for x,y in zip (vibNums,nonzeroEs)])
+                    print("#VENUS NONZEROFREQS:",*nonzeroEs)
+#                   print("#VENUS NONZEROMODES:",nonzeroModes)
+                    print("#VENUS EROT:",Erot)
+                    print("#VENUS EVIB:",sum(Evibs))
+                    print("#VENUS L:", L)
+                    print("#VENUS NVIBS:",*[float(x) for x in vibNums])
+                    print("#VENUS EVIBS:",*[float((x+0.5)*y) for x,y in zip (vibNums,nonzeroEs)])
     
-                self.chooseQPgivenNandLandNormalModes(reactantIndexes,vibNums,L,nonzeroEs,nonzeroModes)
+                self.chooseQPgivenNandEROTandNormalModes(reactantIndexes,vibNums,Erot,nonzeroEs,nonzeroModes)
     
                 q = self.mol.get_positions()[reactantIndexes]
                 p = self.mol.get_momenta()[reactantIndexes]
                 ErotTEST, omegaTEST = self.getErotAndOmegaFromP(masses[reactantIndexes],q,p)
 
                 if (self.debug):
-                    print("Erot:",ErotTEST)
-                    print("omega:", omegaTEST)
+                    print("#VENUS EROT:",ErotTEST)
+                    print("#VENUS OMEGA:", omegaTEST)
 
     
             else:
     
-                raise ValueError("Incorrect sampling method chosen: ", samplingMethod[Nreactant-1])
+                raise ValueError("#VENUS  INCORRECT SAMPLING METHOD CHOSEN: ", samplingMethod[Nreactant-1])
     
             q = self.mol.get_positions()[reactantIndexes]
             if (self.debug):
-                print("Reactant, after selection:")
+                print("#VENUS")
+                print("#VENUS REACTANT, AFTER SELECTION:")
                 for qi in q:
-                    print(qi)
+                    print("#VENUS     ", qi)
+                print("#VENUS")
+    
     
             # After choosing relative positions, rotate the
             # molecule randomly in 3D space
