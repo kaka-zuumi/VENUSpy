@@ -60,7 +60,7 @@ venuspy-cli examples/H2O.input.xyz examples/H2O.input.xtb .  --atomsInFirstGroup
 While tracking the normal mode breakdown of energies over the entire trajectory is slow (this requires a Hessian calculation at each step), this can be done for the first frame from the initial sampling. Search for the `Evibs` keyword in the output to see energies of each mode (in eV).
 
 ```
-grep Evibs production.log
+grep "#VENUS EVIBS" production.log
 ```
 
 When this is done repeatedly, we can get some statistical information by looking at the distribution of individual and total vibrational energies sampled.
@@ -87,7 +87,7 @@ venuspy-cli examples/H2O.input.xyz examples/H2O.input.xtb .  --atomsInFirstGroup
 While tracking the normal mode breakdown of energies over the entire trajectory is slow (this requires a Hessian calculation at each step), this can be done for the first frame from the initial sampling. Search for the `Evibs` keyword in the output to see energies of each mode (in eV).
 
 ```
-grep Evibs production.log
+grep "#VENUS EVIBS" production.log
 ```
 
 When this is done repeatedly, we can get some statistical information by looking at the distribution of individual and total vibrational energies sampled.
