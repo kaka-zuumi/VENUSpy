@@ -1346,7 +1346,7 @@ class initialSampling:
                     print("#VENUS NONZEROFREQS:",*nonzeroEs)
 #                   print("#VENUS NONZEROMODES:",nonzeroModes)
                     print("#VENUS EROT:",Erot)
-                    print("#VENUS EVIB:",sum(Evibs))
+                    print("#VENUS EVIB:",sum([float((x+0.5)*y) for x,y in zip (vibNums,nonzeroEs)]))
                     print("#VENUS L:", L)
                     print("#VENUS NVIBS:",*[float(x) for x in vibNums])
                     print("#VENUS EVIBS:",*[float((x+0.5)*y) for x,y in zip (vibNums,nonzeroEs)])
