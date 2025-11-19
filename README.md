@@ -117,7 +117,7 @@ While tracking the normal mode breakdown of energies over the entire trajectory 
 grep "#VENUS EVIBS" production.log
 ```
 
-When this is done repeatedly, we can get some statistical information by looking at the distribution of individual and total vibrational energies sampled.
+When this is done repeatedly, we can get some statistical information by looking at the distribution of individual and total vibrational energies sampled. 
 
 <img align="center" width="600" height="250" src="images/normalmode.1to1to1.12.63.png">
 
