@@ -121,7 +121,7 @@ When this is done repeatedly, we can get some statistical information by looking
 
 <img align="center" width="600" height="250" src="images/normalmode.1to1to1.12.63.png">
 
-The resulting distribution of vibrational energies in each mode is shown in the figure above. Each mode is given a specific amount of energy so effectively a single state and total energy are sampled. However, the amount of energy is arbitrary and any mix can be requested. For example, if we repeate the procedure with the argument `--EVIBNMODESa X,Y,0.0` where X and Y are two random numbers that add to 12.63 kcal/mol, we then see a distribution as follows:
+The resulting distribution of vibrational energies in each mode is shown in the figure above. Each mode is given a specific amount of energy so effectively a single state and total energy are sampled. However, the amount of energy is arbitrary and any mix can be requested. For example, if we repeat the procedure with the argument `--EVIBNMODESa X,Y,0.0` where X and Y are two random numbers that add to 12.63 kcal/mol, we then see a distribution as follows:
 
 <img align="center" width="600" height="250" src="images/normalmode.RtoRto0.12.63.png">
 
