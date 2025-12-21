@@ -858,8 +858,8 @@ class initialSampling:
                 qq += nmodes[i] * dq[i]
     
             for i in range(Natoms):
-                p[i] = p[i] * np.sqrt(masses[i])              # The (M^1/2) factor "cancels out" the mass-weighting of the normal modes (M^-1/2)(NMODE)
-                q[i] = q0[i] + qq[i] / np.sqrt(masses[i])     # Now, Q = (M^-1) P = (M^-1/2) (M^-1/2)(NMODE)
+                p[i] = p[i] * masses[i]              # The (M^1/2) factor "cancels out" the mass-weighting of the normal modes (M^-1/2)(NMODE)
+                q[i] = q0[i] + qq[i]                 # Now, Q = (M^-1) P = (M^-1/2) (M^-1/2)(NMODE)
     
             qCM = self.getCenterOfMass(masses,q)
     
@@ -1043,8 +1043,8 @@ class initialSampling:
                 qq += nmodes[i] * dq[i]
     
             for i in range(Natoms):
-                p[i] = p[i] * np.sqrt(masses[i])              # The (M^1/2) factor "cancels out" the mass-weighting of the normal modes (M^-1/2)(NMODE)
-                q[i] = q0[i] + qq[i] / np.sqrt(masses[i])     # Now, Q = (M^-1) P = (M^-1/2) (M^-1/2)(NMODE)
+                p[i] = p[i] * masses[i]              # The (M^1/2) factor "cancels out" the mass-weighting of the normal modes (M^-1/2)(NMODE)
+                q[i] = q0[i] + qq[i]                 # Now, Q = (M^-1) P = (M^-1/2) (M^-1/2)(NMODE)
     
             qCM = self.getCenterOfMass(masses,q)
     
