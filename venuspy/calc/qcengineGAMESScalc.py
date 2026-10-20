@@ -52,11 +52,13 @@ class qcengineGAMESScalculator(Calculator):
         self.referencemethod = 'uhf'
         self.freeze_core = 0
         self.df_ints_io = "None"
-        self.method = 'b3lyp'      # LevelOfTheory
-        self.basis_set = '6-31g*'  # BasisSet
+        self.method = 'b3lyp'              # LevelOfTheory
+        self.libxc_functional = None       # LibXC Functional (if method="uselibxc")
+        self.basis_set = '6-31g*'          # BasisSet
         self.mulliken = 0
         self.charge = 0
         self.multiplicity = 2    # 2s+1
+        self.printlevel = 7    # default is 7
 
         self.memory = 1500       # In MB
         self.scratchdir = "/tmp"
@@ -71,11 +73,18 @@ class qcengineGAMESScalculator(Calculator):
                 if (entries[0] == "referencemethod"): self.referencemethod = str(entries[1])
                 if (entries[0] == "freeze_core"): self.freeze_core = int(entries[1])
                 if (entries[0] == "df_ints_io"): self.df_ints_io = str(entries[1])
-                if (entries[0] == "method"): self.method = str(entries[1])
-                if (entries[0] == "basis_set"): self.basis_set = str(entries[1])
+#               if (entries[0] == "method"): self.method = str(entries[1])
+                if (entries[0] == "method"):
+                    subentries = str(entries[1]).split("/")
+                    self.method = str(subentries[0])
+                    if (len(subentries) > 1):
+                      self.basis_set = str(subentries[1])
+#               if (entries[0] == "basis_set"): self.basis_set = str(entries[1]) 
+                if (entries[0] == "libxc_functional"): self.libxc_functional = str(entries[1])
                 if (entries[0] == "mulliken"): self.mulliken = int(entries[1])
                 if (entries[0] == "charge"): self.charge = int(entries[1])
                 if (entries[0] == "multiplicity"): self.multiplicity = int(entries[1])
+                if (entries[0] == "print"): self.printlevel = str(entries[1])
 
         # By default, we start off with no initial MO guess
         self.ref_wfn = None
@@ -94,7 +103,33 @@ class qcengineGAMESScalculator(Calculator):
             "scf__diis" : ".true.", 
             "scf__ethrsh" : 1.0,         # DIIS error to start DIIS (deafult = 0.5 hartree)
             "scf__conv" : self.d_convergence,
+            "contrl__nprint" : self.printlevel,
         }
+
+        # If LibXC is available, use it
+        if (self.method == "uselibxc"):
+            if (self.libxc_functional is None):
+                raise ValueError("If setting 'uselibxc', need to specify 'libxc_functional' in the input file! ... e.g,\n'libxc_functional b3lyp'")
+            self.keywords["libxc__functional"] = self.libxc_functional
+
+       # From the GAMESS documentation:
+#NPUNCH =     option for output to the PUNCH file
+#       =  0  do not punch out the final orbitals
+#       =  1  punch out the occupied orbitals
+#       =  2  punch out occupied and virtual orbitals
+#             The default is NPUNCH = 2.
+#NPREO  = energy and orbital printing options, applied
+#         after other output options, for example NPRINT=-5
+#         for no orbital output overrules NPREO.  NPREO
+#         affects only printing, see NPUNCH just above.
+#         Default: 1,9999,2,1 (meaning print all orbitals,
+#         but no separate list of orbital energies).
+#         To print only HOMO and "LUMO" LCAO coefficients,
+#         and all orbital energies, enter:
+#              NPREO(1)=0,-1,1,9999
+        if True:
+            self.keywords["scf__npunch"] = "0"
+            self.keywords["scf__npreo(1)"] = "0,-1,1,9999"
 
         self.MPIconfig = {
 #           "use_mpiexec" : True,
@@ -134,7 +169,8 @@ class qcengineGAMESScalculator(Calculator):
             out += anAtom.symbol + " " + str(anAtom.position[0]) + " " + str(anAtom.position[1]) + " " + str(anAtom.position[2]) + "\n"
 
         # Fixing CoM and orientation and turning off symmetry to prevent molecular translation
-        mol = qcel.models.Molecule.from_data(out, fix_com=True, fix_orientation=True, fix_symmetry="C1")    # Doesn't seem to work?
+        mol = qcel.models.v2.Molecule.from_data(out, fix_com=True, fix_orientation=True, fix_symmetry="C1")   # The newest version uses "v2" models
+#       mol = qcel.models.Molecule.from_data(out, fix_com=True, fix_orientation=True, fix_symmetry="C1")    # Doesn't seem to work?
 #       mol = qcel.models.Molecule.from_data(out, fix_com=True, fix_symmetry="C1")
 
         # Try the SCF convergence a few times with different approaches:
@@ -165,14 +201,24 @@ class qcengineGAMESScalculator(Calculator):
 #                   print("SCF convergence (0) ... will now use a SAD guess")
 #                   self.ref_wfn = None
 
-        inp = qcel.models.AtomicInput(molecule=mol, driver="gradient", model=self.model, keywords=self.keywords)
+#       spec = qcel.models.v2.AtomicSpecification(driver=qcel.models.v2.DriverEnum.gradient,model=qcel.models.v2.Model(method=self.method,basis="sto",),keywords=self.keywords)
+        spec = qcel.models.v2.AtomicSpecification(driver=qcel.models.v2.DriverEnum.gradient,model=qcel.models.v2.Model(method=self.method,basis=self.basis_set),keywords=self.keywords)
+        inp = qcel.models.v2.AtomicInput(molecule=mol,specification=spec)       # The newest version uses "v2" models
+#       inp = qcel.models.AtomicInput(molecule=mol, driver="gradient", model=self.model, keywords=self.keywords)
         if (self.ref_wfn is not None):
             inp.extras["VECguess"] =  self.ref_wfn
             inp.extras["VECnorb"]  =  self.Norb
 
         f_results = qcng.compute(inp, 'gamess', task_config=self.MPIconfig)
-        self.ref_wfn  = f_results.extras["VEC"] 
-        self.Norb     = f_results.extras["VECnorb"] 
+
+        if ("VEC" in f_results.extras) and ("VECnorb" in f_results.extras):
+            self.ref_wfn  = f_results.extras["VEC"] 
+            self.Norb     = f_results.extras["VECnorb"] 
+
+        try:
+          print(f_results.stdout)
+        except:
+          print(f_results.error.error_message)
 
         e = float(f_results.extras["qcvars"]["CURRENT ENERGY"])
         f = f_results.return_result
@@ -203,7 +249,7 @@ class qcengineGAMESScalculator(Calculator):
         for i in range(Natoms):
             anAtom = atoms[i]
             print("{0:2s}  {1:16.8f} {2:16.8f} {3:16.8f}    {4:18.10f} {5:18.10f} {6:18.10f}".format(anAtom.symbol,*anAtom.position, *f[i]))
-        print("")
+        print("",flush=True)
 
         self.results = {'energy': e, 'forces': f}
 

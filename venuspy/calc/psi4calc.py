@@ -65,6 +65,7 @@ class psi4calculator(Calculator):
 
         self.memory = 1500       # In MB
         self.scratchdir = "/tmp"
+        self.init_wfn = None
 
         # Read in the psi4 input
         with open(input_path, 'r') as f:
@@ -88,6 +89,10 @@ class psi4calculator(Calculator):
                 if (entries[0] == "maxiter"): self.maxiter = int(entries[1])
                 if (entries[0] == "d_convergence"): self.d_convergence = float(entries[1])
                 if (entries[0] == "e_convergence"): self.e_convergence = float(entries[1])
+                if (entries[0] == "init_wfn"): self.init_wfn = str(entries[1])
+                if (entries[0] == "soscf"): self.soscf = int(entries[1])
+
+                if (entries[0] == "print"): self.print = int(entries[1])
 
         # Set up the options for the psi4 calculation
         # Check keywords in the documentation: https://psicode.org/psi4manual/master/autodoc_glossary_options_c.html
@@ -153,6 +158,16 @@ class psi4calculator(Calculator):
         #print(geometry_string)
         psi4.geometry(geometry_string)
 
+        # This is for initial guesses (only done ONCE at the start)
+        if (not (self.init_wfn is None)):
+            try:
+                print("Reading in initial wavefunction: ({0})".format(self.init_wfn),flush=True)
+                e, self.ref_wfn = psi4.energy(self.psi4method,restart_file=self.init_wfn,write_orbitals=self.movecs,return_wfn=True)
+                print("Succeeded reading in initial wavefunction!",flush=True)
+            except:
+                print("Failed reading in initial wavefunction (check if file is correct / correctly copied...)!",flush=True)
+            self.init_wfn = None
+
         # Try the SCF convergence a few times with different approaches:
         #    (1) Try using the reference wavefunction (from the previous step)
         #    (2) Try the default superposition of atomic densities (SAD)
@@ -203,6 +218,12 @@ class psi4calculator(Calculator):
             self.oeprop.add("MULLIKEN_CHARGES")
             self.oeprop.compute()
 
+        if (self.soscf==1):
+            psi4.set_options({'soscf': False})
+            #psi4.set_options({'soscf_max_iter': self.maxiter})
+            #psi4.set_options({'soscf_conv': self.d_convergence})
+            #psi4.set_options({'soscf_start_convergence': 1.0e-6})
+
         # Convert model units to ASE default units (eV and Ang)
         e *= self.E_to_eV
         f *= -self.F_to_eV_Ang
@@ -217,7 +238,7 @@ class psi4calculator(Calculator):
         for i in range(Natoms):
             anAtom = atoms[i]
             print("{0:2s}  {1:16.8f} {2:16.8f} {3:16.8f}    {4:18.10f} {5:18.10f} {6:18.10f}".format(anAtom.symbol,*anAtom.position, *f[i]))
-        print("")
+        print("",flush=True)
 
         self.results = {'energy': e, 'forces': f}
 
