@@ -122,7 +122,7 @@ class psi4calculator(Calculator):
             psi4.set_options({'qc_module': self.qc_module})
 
         # Some alternate psi4 SCF convergence options for second-order SCF (SOSCF):
-        if (False):
+        if (self.soscf>0):
             psi4.set_options({'soscf': True})
             psi4.set_options({'soscf_max_iter': self.maxiter})
             psi4.set_options({'soscf_conv': self.d_convergence})
@@ -160,6 +160,9 @@ class psi4calculator(Calculator):
         #print(geometry_string)
         psi4.geometry(geometry_string)
 
+        if (self.soscf==2):
+            psi4.set_options({'soscf': True})
+
         # This is for initial guesses (only done ONCE at the start)
         if (not (self.init_wfn is None)):
             try:
@@ -193,9 +196,20 @@ class psi4calculator(Calculator):
                     psi4.set_options({'e_convergence': tmp_e_convergence})
             else:
                 try:
-                    e, self.ref_wfn = psi4.energy(self.psi4method,restart_file=self.movecs,write_orbitals=self.movecs,return_wfn=True)
+                    e, tmp_wfn = psi4.energy(self.psi4method,restart_file=self.movecs,write_orbitals=self.movecs,return_wfn=True)
+                    self.ref_wfn = tmp_wfn
                     break
                 except SCFConvergenceError:
+
+                    # Try using SOSCF (if soscf=1 in the input file) before continuing
+                    if (self.soscf==1):
+                        try:
+                            psi4.set_options({'soscf': True})
+                            e, self.ref_wfn = psi4.energy(self.psi4method,restart_file=self.movecs,write_orbitals=self.movecs,return_wfn=True)
+                            break
+                        except SCFConvergenceError:
+                            pass
+
                     print("SCF convergence (0) ... will now use a SAD guess")
                     self.ref_wfn = None
 
