@@ -63,6 +63,7 @@ class psi4calculator(Calculator):
         self.charge = 0
         self.multiplicity = 2    # 2s+1
 
+        self.print = 1
         self.memory = 1500       # In MB
         self.scratchdir = "/tmp"
         self.init_wfn = None
@@ -97,6 +98,7 @@ class psi4calculator(Calculator):
         # Set up the options for the psi4 calculation
         # Check keywords in the documentation: https://psicode.org/psi4manual/master/autodoc_glossary_options_c.html
         psi4.set_memory(str(self.memory)+' MB')
+        psi4.set_options({'PRINT': self.print})   # 0 = minimal, 1 = normal, 2 = verbose, 3+ = very detailed
         psi4.set_options({'maxiter': self.maxiter})
         psi4.set_options({'d_convergence': self.d_convergence})
         psi4.set_options({'e_convergence': self.e_convergence})
