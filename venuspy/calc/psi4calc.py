@@ -53,6 +53,7 @@ class psi4calculator(Calculator):
         self.referencemethod = 'uhf'
         self.freeze_core = 0
         self.mp2_type = "df"
+        self.soscf = 0
         self.qc_module = None
         self.df_ints_io = "None"
         self.dft_spherical_points = 302   # The default for DFT jobs
@@ -159,9 +160,6 @@ class psi4calculator(Calculator):
             geometry_string+="{0} {1} {2} {3}\n".format(anAtom.symbol,*anAtom.position)
         #print(geometry_string)
         psi4.geometry(geometry_string)
-
-        if (self.soscf==2):
-            psi4.set_options({'soscf': True})
 
         # This is for initial guesses (only done ONCE at the start)
         if (not (self.init_wfn is None)):
